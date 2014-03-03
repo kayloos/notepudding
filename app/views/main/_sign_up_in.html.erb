@@ -1,0 +1,33 @@
+<script type="text/ng-template" id="sign_up_in.html">
+  <div class="modal-header">
+    <h3>Sign up / in</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="email" class="control-label col-sm-2">Email</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="email" ng-model="user.email" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="control-label col-sm-2">Password</label>
+        <div class="col-sm-8">
+          <input type="password" class="form-control" id="password" ng-model="user.password" />
+        </div>
+      </div>
+    </div>
+    <div class="reset-password">
+      <a href="#">Click here to reset your password</a>
+    </div>
+    <div class="sign-up-explanation">
+      If the username exists, we will try to sign you in.<br />
+      If the username does not already exist, a new user will be made and you will be signed in.<br />
+      All users that have not been active for 30 days will be destroyed routinely.
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" ng-click="signUpIn()">Sign up / In</button>
+    <button class="btn btn-link" ng-click="cancel()">Cancel</button>
+  </div>
+</script>

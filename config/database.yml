@@ -1,0 +1,35 @@
+# SQLite version 3.x
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: notepudding_development
+  username: kalusn
+  pool: 5
+  timeout: 5000
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test: &test
+  adapter: postgresql
+  encoding: unicode
+  database: notepudding_test
+  username: kalusn
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: d5p9k2psn6bflt
+  user: hogfqdkbhkfxus
+  password: OkRygfdy7tmc4DzlCp_33JrBqx
+  pool: 5
+  timeout: 5000
+
+cucumber:
+  <<: *test

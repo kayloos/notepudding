@@ -1,0 +1,113 @@
+// Place all the styles related to the Main controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+html {
+  font-size: 10px;
+  height:100%; width: 100%;
+}
+body {
+  background: #252525;
+  margin:0;padding:0;
+  height:100%; width: 100%;
+}
+// BEGIN PAPER STYLE
+.frame {
+  position: relative;
+  margin: 0 auto;
+  width: 800px;
+  height: 100%;
+  border: 1px solid rgba(0,0,0,0.4);
+  border-top: 0; border-bottom: 0;
+}
+.paper {
+  width: 100%; height: 100%;
+  background: url("paperbar.png");
+  z-index: 0;
+}
+.vertical_divider {
+  width: 1px;
+  height: 100%;
+  background: rgba(0,0,0,0.15);
+  position: absolute;
+  left: 96px;
+  z-index: 1;
+}
+.header {
+  position: absolute;
+  width: 100%;
+  height: 80px;
+  top:0;left:0;
+  border:0; margin: 0; padding: 0;
+  z-index: 0;
+}
+// END PAPER STYLE
+// BEGIN PAPER BUTTON STYLES
+#page_counter {
+  top: 50%;
+  right: -72px;
+  margin-top: -24px;
+  color: rgba(255,255,255,0.4);
+}
+#page_counter:hover {
+  color: rgba(255,255,255,1);
+}
+.gear, .save, .arrow, .sign_up, .sign_out {
+  width: 32px;
+  height: 32px;
+  opacity: 0.4;
+  z-index: 10;
+}
+.arrow { width: 48px; height: 48px; }
+.gear:hover, .save:hover, .arrow:hover, .sign_up:hover, .sign_out:hover {
+  opacity: 1;
+}
+.arrow.deactivated {
+  opacity: 0.6;
+}
+#turn_left, #turn_right, #settings, #save, #sign_up, #page_counter, #sign_out {
+  position: absolute;
+  z-index: 10;
+}
+#turn_left {
+  left: -80px;
+  bottom: 16px;
+}
+#turn_right {
+  right: -80px;
+  bottom: 16px;
+}
+#settings {
+  top: 16px;
+  right: -64px;
+}
+#save {
+  top: 16px;
+  left: -64px;
+}
+#sign_up, #sign_out {
+  top: 16px;
+  left: -108px;
+}
+// END PAPER BUTTON STYLES
+// BEGIN PAPER TEXT STYLES
+.text_area {
+  position: absolute;
+  background: transparent;
+  border: 0;
+  resize: none;
+  height: 60px;
+  line-height: 30px;
+  z-index: 1;
+}
+textarea:focus {
+  outline: none;
+  resize: both;
+}
+// END PAPER TEXT STYLES
+// BEGIN SIGN UP STYLES
+.sign-up-explanation {
+  font-size: 0.8em;
+  margin-top: 16px;
+}
+// END SIGN UP STYLES
