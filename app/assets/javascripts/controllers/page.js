@@ -1,4 +1,5 @@
-notepuddingApp.controller('PageCtrl', function($scope, $rootScope, $timeout, $modal, $http, $log) {
+notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$modal', '$http', '$log', 
+function($scope, $rootScope, $timeout, $modal, $http, $log) {
 
   var textN           = 0;
   $rootScope.maxPages = 80;
@@ -126,7 +127,7 @@ notepuddingApp.controller('PageCtrl', function($scope, $rootScope, $timeout, $mo
     $scope.currentPage.textareas[idx].style.width = $(target).width() + "px";
     $scope.currentPage.textareas[idx].style.height = $(target).height() + "px";
   }
-});
+}]);
 
 function addText (event, $scope, n) {
   var x,y;
