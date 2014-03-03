@@ -1,4 +1,4 @@
-var SignUpInCtrl = function($scope, $modalInstance) {
+notepuddingApp.controller('SignUpInCtrl', ['$scope', '$modalInstance', function($scope, $modalInstance) {
   $scope.user = {};
 
   $scope.signUpIn = function() {
@@ -8,4 +8,4 @@ var SignUpInCtrl = function($scope, $modalInstance) {
   $scope.cancel = function() {
     $modalInstance.dismiss('cancel');
   };
-}
+}]);

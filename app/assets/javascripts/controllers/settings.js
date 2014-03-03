@@ -1,4 +1,4 @@
-var SettingsCtrl = function ($scope, $rootScope, $modalInstance) {
+notepuddingApp.controller('SettingsCtrl', ['$scope', '$rootScope', '$modalInstance', function ($scope, $rootScope, $modalInstance) {
   $scope.tempConfig = clone($rootScope.config);
   $scope.ok = function () {
     $modalInstance.close($scope.tempConfig);
@@ -8,4 +8,4 @@ var SettingsCtrl = function ($scope, $rootScope, $modalInstance) {
     $scope.tempConfig = [];
     $modalInstance.dismiss('cancel');
   };
-};
+}]);
