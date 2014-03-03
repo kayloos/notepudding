@@ -21,7 +21,7 @@
   <div id="page_counter">
     {{currentPageIdx + 1}} / {{maxPages}}
   </div>
-  <div class="header" ng-style="{backgroundColor: config.style.backgroundColor}"></div>
+  <div class="header" ng-style="{backgroundColor: config.style.backgroundColor}" ng-click="addContent($event)"></div>
   <div class="paper" ng-click="addContent($event)">
     <div ng-repeat="textarea in currentPage.textareas">
       <textarea type="text"
