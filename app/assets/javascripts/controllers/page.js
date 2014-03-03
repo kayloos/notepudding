@@ -30,7 +30,7 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
   $scope.settings = function() {
     var modalInstance = $modal.open({
       templateUrl: 'settings.html',
-      controller: SettingsCtrl
+      controller: 'SettingsCtrl'
     });
 
     modalInstance.result.then(function (newConfig) {
@@ -43,7 +43,7 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
   $scope.signUpIn = function() {
     var modalInstance = $modal.open({
       templateUrl: 'sign_up_in.html',
-      controller: SignUpInCtrl
+      controller: 'SignUpInCtrl'
     });
 
     modalInstance.result.then(function (user) {
