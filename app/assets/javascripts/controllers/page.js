@@ -99,11 +99,11 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
         $scope.pages[0] = {textareas: []};
         $scope.currentPage = clone($scope.pages[0]);
         $scope.userSignedIn = false;
-        $scope.alerts.push({type: 'success', info: data.info});
+        timeoutAlert({type: 'success', info: data.info});
         $log.info(data);
     }).error(function (data) {
         $log.info(data);
-        $scope.alerts.push({type: 'danger', info: 'Could not sign out user: ' + data});
+        timeoutAlert({type: 'danger', info: 'Could not sign out user: ' + data});
     });
   };
   
