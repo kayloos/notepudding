@@ -159,7 +159,6 @@ function addText (event, $scope, n) {
   y = event.offsetY == undefined ? event.clientY - $(event.target).offset().top : event.offsetY
   if (90 < x && x < 120) x = 100;
   if (50 < y)       y = Math.round(y/30) * 30 + 5;
-  console.log(event.offsetX);
   $scope.currentPage.textareas.push({
     id: n,
     style: {
