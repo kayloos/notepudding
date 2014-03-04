@@ -2,22 +2,22 @@
   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.info}}</alert>
   <div class="vertical_divider"></div>
   <div id="turn_left">
-    <a href="#" ng-click="turnLeft()"><%= image_tag "left.png", class: "arrow" %></a>
+    <a href="" ng-click="turnLeft()"><%= image_tag "left.png", class: "arrow" %></a>
   </div>
   <div id="turn_right">
-    <a href="#" ng-click="turnRight()"><%= image_tag "right.png", class: "arrow" %></a>
+    <a href="" ng-click="turnRight()"><%= image_tag "right.png", class: "arrow" %></a>
   </div>
   <div id="settings">
-    <a href="#" ng-click="settings()"><%= image_tag "settings.png", class: "gear" %></a>
+    <a href="" ng-click="settings()"><%= image_tag "settings.png", class: "gear" %></a>
   </div>
   <div id="save">
-    <a href="#" ng-click="save()" ng-show="userSignedIn"><%= image_tag "save.png", class: "save" %></a>
+    <a href="" ng-click="save()" ng-show="userSignedIn"><%= image_tag "save.png", class: "save" %></a>
   </div>
   <div id="sign_up" ng-hide="userSignedIn">
-    <a href="#" ng-click="signUpIn()"><%= image_tag "sign_up.png", class: "sign_up" %></a>
+    <a href="" ng-click="signUpIn()"><%= image_tag "sign_up.png", class: "sign_up" %></a>
   </div>
   <div id="sign_out" ng-show="userSignedIn">
-    <a href="#" ng-click="signOut()"><%= image_tag "sign_out.png", class: "sign_out" %></a>
+    <a href="" ng-click="signOut()"><%= image_tag "sign_out.png", class: "sign_out" %></a>
   </div>
   <div id="page_counter">
     {{currentPageIdx + 1}} / {{maxPages}}

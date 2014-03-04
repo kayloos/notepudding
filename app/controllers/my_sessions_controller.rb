@@ -13,6 +13,7 @@ class MySessionsController < Devise::SessionsController
                        :password_confirmation => user[:password])
       if @user.valid?
         @user.save
+        @user.pages << Page.new({:pages_dump => params[:pages_dump]})
         info = "Successfully created and signed user in as " + user[:email]
       else
         info = "Validation errors: " + @user.errors.full_messages.join(", ")

@@ -69,11 +69,13 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
     });
 
     modalInstance.result.then(function (user) {
+      $scope.pages[$scope.currentPageIdx] = clone($scope.currentPage);
       $http.post('/users/sign_in', {
         user: {
           email: user.email,
           password: user.password
-        }
+        },
+        pages_dump: $scope.pages
       }).success(function (data, status, header, config) {
         if (data.type == "success") {
           $scope.pages = data.user.pages;
@@ -158,7 +160,7 @@ function addText (event, $scope, n) {
   x = event.offsetX == undefined ? event.clientX - $(event.target).offset().left : event.offsetX
   y = event.offsetY == undefined ? event.clientY - $(event.target).offset().top : event.offsetY
   if (90 < x && x < 120) x = 100;
-  if (50 < y)       y = Math.round(y/30) * 30 + 5;
+  if (50 < y)            y = Math.round(y/30) * 30 + 5;
   $scope.currentPage.textareas.push({
     id: n,
     style: {
