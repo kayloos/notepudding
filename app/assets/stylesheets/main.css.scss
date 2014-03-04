@@ -41,6 +41,12 @@ body {
   border:0; margin: 0; padding: 0;
   z-index: 0;
 }
+.alert{
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  margin: 0 auto;
+}
 // END PAPER STYLE
 // BEGIN PAPER BUTTON STYLES
 #page_counter {
@@ -109,5 +115,8 @@ textarea:focus {
 .sign-up-explanation {
   font-size: 0.8em;
   margin-top: 16px;
+}
+.validation-error {
+  color: red;
 }
 // END SIGN UP STYLES

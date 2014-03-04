@@ -1,6 +1,8 @@
 Notepudding::Application.routes.draw do
 
-  devise_for :users, :controllers => { :sessions => "posts" }
+  devise_for :users, :controllers => { :sessions => "my_sessions" }
+
+  post '/save_page', to: 'main#save_page'
 
   root 'main#start'
   # The priority is based upon order of creation: first created -> highest priority.

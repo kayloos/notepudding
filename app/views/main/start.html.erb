@@ -1,4 +1,5 @@
 <div class="frame" ng-controller="PageCtrl" ng-style="config.style">
+  <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.info}}</alert>
   <div class="vertical_divider"></div>
   <div id="turn_left">
     <a href="#" ng-click="turnLeft()"><%= image_tag "left.png", class: "arrow" %></a>
@@ -10,7 +11,7 @@
     <a href="#" ng-click="settings()"><%= image_tag "settings.png", class: "gear" %></a>
   </div>
   <div id="save">
-    <a href="#" ng-click="save()"><%= image_tag "save.png", class: "save" %></a>
+    <a href="#" ng-click="save()" ng-show="userSignedIn"><%= image_tag "save.png", class: "save" %></a>
   </div>
   <div id="sign_up" ng-hide="userSignedIn">
     <a href="#" ng-click="signUpIn()"><%= image_tag "sign_up.png", class: "sign_up" %></a>
@@ -43,4 +44,4 @@
   <%= render 'sign_up_in' %>
   <%= render 'save' %>
 </div>
-<script>function getUser () { return <%=raw @user %>}</script>
+<script>function getUser () { return <%=raw @user %> }</script>
