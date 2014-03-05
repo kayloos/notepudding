@@ -6,6 +6,7 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
   $scope.pages        = [];
   $scope.alerts       = [];
   alertTimeoutTime    = 8000;
+  $scope.moveTarget = null;
 
   user = getUser();
 
@@ -15,7 +16,7 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
   }
   else {
     $scope.userSignedIn = false;
-    $scope.pages[0]     = {textareas: []};
+    $scope.pages[0]     = defaultPage();
   }
   $scope.currentPageIdx = $scope.pages.length - 1;
   $scope.currentPage    = clone($scope.pages[$scope.currentPageIdx]);
@@ -38,11 +39,6 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
     }).error(function(data) {
       timeoutAlert({type: "danger", info: "Could not save pages"});
     });
-    // FIXME: Save page to users database
-    //        1. Make rails action
-    //        2. make $http.post(pages) that calls rails action
-    //        3. handle response
-    //        Remember to check if user is signed in or not.
   };
 
   $scope.settings = function() {
@@ -125,6 +121,24 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
       $scope.currentPageIdx++;
     }
   };
+  
+  $scope.move = function(event) {
+    if ($scope.isMoving && $scope.moveTarget != null) {
+      var x = event.pageX - event.delegateTarget.offsetLeft - 5,
+          y = event.pageY - event.delegateTarget.offsetTop - 16;
+      $scope.currentPage.textareas[$scope.moveTarget].divStyle = { top: y + "px", left: x + "px" };
+    }
+  };
+
+  $scope.moveTheTarget = function($index) {
+    $scope.isMoving = true;
+    $scope.moveTarget = $index;
+  };
+
+  $scope.stopMoveTarget = function() {
+    $scope.isMoving = false;
+    $scope.moveTarget = null;
+  }
 
   $scope.addContent = function(event) {
     addText(event, $scope, textN++);
@@ -144,9 +158,9 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
 
   // When resizing using the browser we want the new size of the textarea to persist.
   $scope.rememberDimensions = function(event, idx) {
-    var target = event.target || event.srcElement;
-    $scope.currentPage.textareas[idx].style.width = $(target).width() + "px";
-    $scope.currentPage.textareas[idx].style.height = $(target).height() + "px";
+    var target = $(event.delegateTarget);
+    $scope.currentPage.textareas[idx].textareaStyle.width  = target.outerWidth() + "px";
+    $scope.currentPage.textareas[idx].textareaStyle.height = target.outerHeight() + "px";
   };
 
   timeoutAlert = function(newAlert) {
@@ -155,18 +169,27 @@ function($scope, $rootScope, $timeout, $modal, $http, $log) {
   };
 }]);
 
+function getX(event) {
+  return event.offsetX == undefined ? event.clientX - $(event.target).offset().left : event.offsetX;
+}
+
+function getY(event) {
+  return event.offsetY == undefined ? event.clientY - $(event.target).offset().top : event.offsetY;
+}
+
 function addText (event, $scope, n) {
-  var x,y;
-  x = event.offsetX == undefined ? event.clientX - $(event.target).offset().left : event.offsetX
-  y = event.offsetY == undefined ? event.clientY - $(event.target).offset().top : event.offsetY
+  var x = getX(event),
+      y = getY(event);
   if (90 < x && x < 140) x = 100;
   if (50 < y)            y = Math.round(y/30) * 30 + 5;
   $scope.currentPage.textareas.push({
     id: n,
-    style: {
-      "left": x + "px",
-      "top": y + "px",
-      "min-width": "360px",
+    divStyle: {
+      left: x + "px",
+      top: y + "px",
+    },
+    textareaStyle: {
+      width: "360px",
       height: "30px",
     },
     content: ""

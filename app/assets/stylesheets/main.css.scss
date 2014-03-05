@@ -97,18 +97,31 @@ body {
 }
 // END PAPER BUTTON STYLES
 // BEGIN PAPER TEXT STYLES
-.text_area {
+.textarea-div {
   position: absolute;
+}
+.move {
+  position: absolute;
+  left: -20px;
+  top: -20px;
+}
+.move-icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.1;
+  cursor: pointer;
+}
+.move-icon:hover {
+  opacity: 0.5
+}
+.text_area {
   background: transparent;
   border: 0;
-  resize: none;
+  resize: both;
   height: 60px;
   line-height: 30px;
   z-index: 1;
-}
-textarea:focus {
   outline: none;
-  resize: both;
 }
 // END PAPER TEXT STYLES
 // BEGIN SIGN UP STYLES

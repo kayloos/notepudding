@@ -12,10 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.autosize
 //= require underscore
 //= require angular
 //= require angular-ui
-//= require autogrow
 //= require default_page
 //= require main
 //= require controllers/page

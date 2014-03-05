@@ -1,4 +1,8 @@
-<div class="frame" ng-controller="PageCtrl" ng-style="config.style">
+<div class="frame"
+  ng-controller="PageCtrl"
+  ng-style="config.style"
+  ng-mouseup="stopMoveTarget()"
+  ng-mousemove="move($event)">
   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.info}}</alert>
   <div class="vertical_divider"></div>
   <div id="turn_left">
@@ -25,19 +29,28 @@
   <div class="header" ng-style="{backgroundColor: config.style.backgroundColor}" ng-click="addContent($event)"></div>
   <div class="paper" ng-click="addContent($event)">
     <div ng-repeat="textarea in currentPage.textareas">
-      <textarea type="text"
-        ng-keydown="textListener($event);"
-        ng-click="$event.stopPropagation();"
-        ng-model="currentPage.textareas[$index].content"
-        ng-blur="removeIfEmpty($event, $index)"
-        ng-mouseup="rememberDimensions($event, $index)"
-        ng-style="textarea.style"
-        focused-on="$last"
-        autogrow
-        id="textarea_{{$index}}"
-        class="text_area autogrow-short">
-        {{textarea.content}}
-      </textarea>
+      <div class="textarea-div" ng-style="textarea.divStyle">
+        <div class="move"
+             ng-show="isFocused || isMoving"
+             ng-mousedown="moveTheTarget($index)"
+             ng-init="isMoving = false">
+          <%= image_tag "move.png", class: "move-icon" %>
+        </div>
+        <textarea type="text"
+          ng-keydown="textListener($event);"
+          ng-click="$event.stopPropagation();"
+          ng-model="currentPage.textareas[$index].content"
+          ng-blur="removeIfEmpty($event, $index); isFocused = false"
+          ng-mouseup="rememberDimensions($event, $index)"
+          ng-focus="isFocused = true"
+          ng-init="isFocused = false"
+          ng-style="textarea.textareaStyle"
+          focused-on="$last"
+          autosize
+          class="text_area">
+          {{textarea.content}}
+        </textarea>
+    </div>
     </div>
   </div>
   <%= render 'settings' %>

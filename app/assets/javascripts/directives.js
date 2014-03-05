@@ -29,8 +29,8 @@ notepuddingApp.directive('focusedOn', ['$timeout', function($timeout) {
   };
 }]);
 
-notepuddingApp.directive('autogrow', ['$timeout', function($timeout) {
+notepuddingApp.directive('autosize', ['$timeout', function($timeout) {
   return function($scope, $element, $attrs) {
-    $element.autogrow();
+    $timeout(function() {$element.autosize();}, 0, true);
   };
 }]);
