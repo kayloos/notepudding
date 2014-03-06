@@ -3,7 +3,6 @@ class MySessionsController < Devise::SessionsController
   def create
     user = params[:user]
     type = "success"
-    logger.info params.to_yaml
 
     if User.exists?(email: user[:email])
       info = "Successfully signed in as " + user[:email]

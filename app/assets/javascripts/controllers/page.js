@@ -29,7 +29,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     };
 
     $scope.save = function() {
-      $scope.pages[$scope.currentPageIdx] = clone($scope.currentPage);
+      if ($scope.currentPage.textareas.length > 0)
+        $scope.pages[$scope.currentPageIdx] = clone($scope.currentPage);
       $http.post('/save_page', {
         pages_dump: $scope.pages
       }).success(function(data) {
@@ -177,6 +178,8 @@ function getY(event) {
 }
 
 function addText (event, $scope, n) {
+  if ($scope.currentPage.textareas == null)
+    $scope.currentPage.textareas = []
   var x = getX(event),
       y = getY(event);
   if (90 < x && x < 140) x = 100;
