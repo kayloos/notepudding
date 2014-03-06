@@ -16,6 +16,8 @@
 //= require underscore
 //= require angular
 //= require angular-ui
+//= require raphael
+//= require drawing_logic
 //= require default_page
 //= require main
 //= require controllers/page

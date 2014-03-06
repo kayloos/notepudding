@@ -34,3 +34,7 @@ notepuddingApp.directive('autosize', ['$timeout', function($timeout) {
     $timeout(function() {$element.autosize();}, 0, true);
   };
 }]);
+
+// notepuddingApp.directive('pageDrawingFrame', [function() {
+
+// }]);
