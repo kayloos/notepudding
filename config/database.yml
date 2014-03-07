@@ -28,7 +28,7 @@ production:
   encoding: unicode
   database: notepudding_production
   user: notepudding
-  password: Rubiksfladjern123
+  password: s(Jxo#2=Zxi
   port: 5432
   pool: 5
   timeout: 5000
