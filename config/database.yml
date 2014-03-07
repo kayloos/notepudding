@@ -25,10 +25,9 @@ test: &test
 production:
   adapter: postgresql
   encoding: unicode
-  host: ec2-54-204-2-217.compute-1.amazonaws.com
-  database: da6n7fu6chn2t5
-  user: cjbexjiwvcprab
-  password: 1aWGrVe_nYtAzBEI9CIa_yf7AJ
+  database: notepudding_production
+  user: postgres
+  password: Rubiksfladjern123
   port: 5432
   pool: 5
   timeout: 5000
