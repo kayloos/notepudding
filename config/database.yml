@@ -26,8 +26,8 @@ production:
   adapter: postgresql
   encoding: unicode
   database: notepudding_production
-  user: postgres
-  password: Rubiksfladjern123
+  user: notepudding_development # this is the user name deal with it
+  password: dJx7IqL8epP)2#
   port: 5432
   pool: 5
   timeout: 5000
