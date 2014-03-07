@@ -24,6 +24,7 @@ test: &test
 
 production:
   adapter: postgresql
+  host: localhost
   encoding: unicode
   database: notepudding_production
   user: notepudding
