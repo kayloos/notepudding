@@ -29,7 +29,7 @@ production:
   database: notepudding_production
   user: notepudding
   password: s(Jxo#2=Zxi
-  port: 5432
+  port: 5433
   pool: 5
   timeout: 5000
 
