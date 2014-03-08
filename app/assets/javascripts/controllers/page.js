@@ -68,7 +68,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         $http.post('/users/sign_in', {
           user: {
             email: user.email,
-            password: user.password
+            password: user.password,
+            remember_me: 1
           },
           pages_dump: $scope.pages
         }).success(function (data, status, header, config) {
