@@ -27,7 +27,7 @@ production:
   host: localhost
   encoding: unicode
   database: notepudding_production
-  user: notepudding
+  username: notepudding
   password: s(Jxo#2=Zxi
   port: 5433
   pool: 5
