@@ -1,12 +1,16 @@
 notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$modal', '$http', '$log',
   function ($scope, $rootScope, $timeout, $modal, $http, $log) {
-    var textN           = 0;
-    $rootScope.maxPages = 80;
-    alertTimeoutTime    = 8000;
-    $scope.pages        = [];
-    $scope.alerts       = [];
-    $scope.moveTarget   = null;
-    user = getUser();
+    var textN            = 0,
+        user             = getUser(),
+        alertTimeoutTime = 8000,
+        lastPath         = {x1: null, y1: null, x2: null, y2: null};
+    $rootScope.maxPages       = 80;
+    $scope.pages              = [];
+    $scope.alerts             = [];
+    $scope.moveTarget         = null;
+    $scope.shouldActivateDraw = "neutral";
+    $scope.drawingPaths       = [];
+    $scope.pathIndex          = 0;
 
     if (!$.isEmptyObject(user)) {
       $scope.userSignedIn = true;
@@ -96,9 +100,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
           $scope.currentPage = clone($scope.pages[0]);
           $scope.userSignedIn = false;
           timeoutAlert({type: 'success', info: data.info});
-          $log.info(data);
       }).error(function (data) {
-          $log.info(data);
           timeoutAlert({type: 'danger', info: 'Could not sign out user: ' + data});
       });
     };
@@ -124,8 +126,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     
     $scope.move = function(event) {
       if ($scope.isMoving && $scope.moveTarget != null) {
-        var x = event.pageX - event.delegateTarget.offsetLeft - 5,
-            y = event.pageY - event.delegateTarget.offsetTop - 16;
+        var x = getX(event) - 5,
+            y = getY(event) - 16;
         $scope.currentPage.textareas[$scope.moveTarget].divStyle = { top: y + "px", left: x + "px" };
       }
     };
@@ -140,8 +142,62 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
       $scope.moveTarget = null;
     };
 
+    $scope.startDrawingTimer = function() {
+      $scope.shouldActivateDraw = "neutral";
+      $timeout(function() {
+        if ($scope.shouldActivateDraw == "neutral")
+          $scope.shouldActivateDraw = "ready";
+      }, 200, false);
+    }
+
     $scope.addContent = function(event) {
-      addText(event, $scope, textN++);
+      if (jQuery.inArray($scope.shouldActivateDraw, ["neutral", "notready"]) != -1) {
+        $scope.shouldActivateDraw = "notready";
+        addText(event, $scope, textN++);
+      }
+    };
+    
+    $scope.stopDrawing = function() {
+      $scope.shouldActivateDraw = "notready";
+      if ($scope.drawingPaths[$scope.pathIndex] != undefined)
+        $scope.pathIndex++;
+    }
+
+    $scope.freehand = function(event) {
+      if ($scope.shouldActivateDraw == "ready") {
+        var x = getX(event),
+            y = getY(event);
+        $scope.drawingPaths[$scope.pathIndex] = "M " + x + " " + y;
+        lastPath.x1 = x, lastPath.y1 = y;
+        $scope.shouldActivateDraw = "drawing";
+      }
+      else if ($scope.shouldActivateDraw == "drawing") {
+        var x = getX(event),
+            y = getY(event);
+        if (lastPath.x2 != null && lastPath.y2 != null) {
+          var ax = lastPath.x1 - lastPath.x2,
+              ay = lastPath.y1 - lastPath.y2,
+              bx = x - lastPath.x2,
+              by = y - lastPath.y2;
+
+          var cps = calcControlPoints(ax,ay,bx,by);
+          cps = {
+            a: {x: cps.a.x + lastPath.x2, y: cps.a.y + lastPath.y2},
+            b: {x: cps.b.x + lastPath.x2, y: cps.b.y + lastPath.y2}
+          }
+          var resultString = "C " + cps.a.x + " " + cps.a.y + " " + cps.b.x + " " + cps.b.y + " " + x + " " + y + " ";
+          $log.info(cps);
+          $log.info(resultString);
+
+          $scope.drawingPaths[$scope.pathIndex] += resultString;
+        }
+
+        lastPath.x1 = lastPath.x2,
+        lastPath.y1 = lastPath.y2,
+        lastPath.x2 = x,
+        lastPath.y2 = y;
+      }
+
     };
 
     $scope.textListener = function(event, id) {
@@ -171,11 +227,11 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
 ]);
 
 function getX(event) {
-  return event.offsetX == undefined ? event.clientX - $(event.target).offset().left : event.offsetX;
+  return event.pageX - event.delegateTarget.offsetLeft;
 }
 
 function getY(event) {
-  return event.offsetY == undefined ? event.clientY - $(event.target).offset().top : event.offsetY;
+  return event.pageY - event.delegateTarget.offsetTop;
 }
 
 function addText (event, $scope, n) {
@@ -197,6 +253,25 @@ function addText (event, $scope, n) {
     },
     content: ""
   });
+}
+
+function calcControlPoints(x1,y1,x2,y2) {
+  var tanA = Math.atan(y1/x1),
+      tanB = Math.atan(y2/x2),
+      bisect = (tanA + tanB) / 2,
+      tanAB = bisect + Math.PI/2,
+      r = 40,
+      ax = round(Math.cos(tanAB) * r),
+      ay = round(Math.sin(tanAB) * r),
+      bx = round(Math.cos(tanAB) * -r),
+      by = round(Math.sin(tanAB) * -r),
+      a = {x: ax, y: ay},
+      b = {x: bx, y: by};
+  return {a: a, b: b};
+}
+
+function round(x) {
+  return Math.round(x);
 }
 
 function clone (obj) {
