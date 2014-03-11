@@ -35,6 +35,16 @@ notepuddingApp.directive('autosize', ['$timeout', function($timeout) {
   };
 }]);
 
-// notepuddingApp.directive('pageDrawingFrame', [function() {
-
-// }]);
+notepuddingApp.directive('svg', function() {
+  return function(scope, element, attrs) {
+    attrs.$observe('ngD', function(value) {
+      attrs.$set('d', value); 
+    });
+    attrs.$observe('ngCx', function(value) {
+      attrs.$set('cx', value); 
+    });
+    attrs.$observe('ngCy', function(value) {
+      attrs.$set('cy', value); 
+    });
+  };
+});

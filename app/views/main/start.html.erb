@@ -1,8 +1,19 @@
-<div class="frame"
+<div id="frame"
   ng-controller="PageCtrl"
   ng-style="config.style"
-  ng-mouseup="stopMoveTarget()"
-  ng-mousemove="move($event)">
+  ng-mousedown="startDrawingTimer();"
+  ng-click="stopDrawing()"
+  ng-dblclick="shouldActivateDraw = 'ready'"
+  ng-mouseup="stopMoveTarget(); addContent($event); stopDrawing()"
+  ng-mousemove="move($event); freehand($event)"
+  >
+  <svg>
+    <g fill="none" stroke="black" stroke-width="2px">
+      <path svg ng-repeat="path in drawingPaths" ng-d="{{ path }}" />
+    </g>
+    <circle svg ng-repeat="p in aCps" r="2" fill="red" ng-cx="{{ p.x }}" ng-cy="{{ p.y }}" />
+    <circle svg ng-repeat="p in bCps" r="2" fill="blue" ng-cx="{{ p.x }}" ng-cy="{{ p.y }}" />
+  </svg>
   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.info}}</alert>
   <div class="vertical_divider"></div>
   <div id="turn_left">
@@ -26,8 +37,8 @@
   <div id="page_counter">
     {{currentPageIdx + 1}} / {{maxPages}}
   </div>
-  <div class="header" ng-style="{backgroundColor: config.style.backgroundColor}" ng-click="addContent($event)"></div>
-  <div class="paper" ng-click="addContent($event)">
+  <div class="header" ng-style="{backgroundColor: config.style.backgroundColor}"></div>
+  <div class="paper">
     <div ng-repeat="textarea in currentPage.textareas">
       <div class="textarea-div" ng-style="textarea.divStyle">
         <div class="move"

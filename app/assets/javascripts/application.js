@@ -15,6 +15,7 @@
 //= require jquery.autosize
 //= require underscore
 //= require angular
+//= require angular-touch
 //= require angular-ui
 //= require raphael
 //= require drawing_logic

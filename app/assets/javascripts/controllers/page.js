@@ -1,12 +1,21 @@
 notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$modal', '$http', '$log',
   function ($scope, $rootScope, $timeout, $modal, $http, $log) {
-    var textN           = 0;
-    $rootScope.maxPages = 80;
-    alertTimeoutTime    = 8000;
-    $scope.pages        = [];
-    $scope.alerts       = [];
-    $scope.moveTarget   = null;
-    user = getUser();
+    var textN            = 0,
+        user             = getUser(),
+        alertTimeoutTime = 8000,
+        lastPath         = {x1: null, y1: null, x2: null, y2: null},
+        begCp            = {x:null, y:null},
+        endCp;
+
+    $scope.aCps = [];
+    $scope.bCps = [];
+    $rootScope.maxPages       = 80;
+    $scope.pages              = [];
+    $scope.alerts             = [];
+    $scope.moveTarget         = null;
+    $scope.shouldActivateDraw = "neutral";
+    $scope.drawingPaths       = [];
+    $scope.pathIndex          = 0;
 
     if (!$.isEmptyObject(user)) {
       $scope.userSignedIn = true;
@@ -96,9 +105,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
           $scope.currentPage = clone($scope.pages[0]);
           $scope.userSignedIn = false;
           timeoutAlert({type: 'success', info: data.info});
-          $log.info(data);
       }).error(function (data) {
-          $log.info(data);
           timeoutAlert({type: 'danger', info: 'Could not sign out user: ' + data});
       });
     };
@@ -124,8 +131,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     
     $scope.move = function(event) {
       if ($scope.isMoving && $scope.moveTarget != null) {
-        var x = event.pageX - event.delegateTarget.offsetLeft - 5,
-            y = event.pageY - event.delegateTarget.offsetTop - 16;
+        var x = getX(event) - 5,
+            y = getY(event) - 16;
         $scope.currentPage.textareas[$scope.moveTarget].divStyle = { top: y + "px", left: x + "px" };
       }
     };
@@ -140,8 +147,81 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
       $scope.moveTarget = null;
     };
 
+    $scope.startDrawingTimer = function() {
+      $scope.shouldActivateDraw = "neutral";
+      $timeout(function() {
+        if ($scope.shouldActivateDraw == "neutral")
+          $scope.shouldActivateDraw = "ready";
+      }, 100, false);
+    }
+
     $scope.addContent = function(event) {
-      addText(event, $scope, textN++);
+      if (jQuery.inArray($scope.shouldActivateDraw, ["neutral", "notready"]) != -1) {
+        $scope.shouldActivateDraw = "notready";
+        addText(event, $scope, textN++);
+      }
+    };
+    
+    $scope.stopDrawing = function() {
+      $scope.shouldActivateDraw = "notready";
+      if ($scope.drawingPaths[$scope.pathIndex] != undefined)
+        $scope.pathIndex++;
+    }
+
+    $scope.freehand = function(event) {
+      var x, y, ax, ay, bx, by, cps, resultString;
+      if ($scope.shouldActivateDraw == "ready") {
+        x = getX(event),
+        y = getY(event);
+        $scope.drawingPaths[$scope.pathIndex] = "M " + x + " " + y + "\n";
+        lastPath.x1 = x, lastPath.y1 = y;
+        $scope.shouldActivateDraw = "drawing";
+      }
+      else if ($scope.shouldActivateDraw == "drawing") {
+        x = getX(event),
+        y = getY(event);
+        $scope.drawingPaths[$scope.pathIndex] += "L" + x + ", " + y + " ";
+        // if (lastPath.x2 != null && lastPath.y2 != null) {
+          // // Subtract middle vertex from first and last vertex.
+          // // Then we do the calculations, assuming middle vertex is (0,0)
+          // $log.info("All points: " + [lastPath.x1, lastPath.y1, lastPath.x2, lastPath.y2, x, y].join(", "));
+          // ax = lastPath.x1 - lastPath.x2,
+          // ay = lastPath.y1 - lastPath.y2,
+          // bx = x           - lastPath.x2,
+          // by = y           - lastPath.y2;
+
+          // cps = calcControlPoints(ax,ay,bx,by);
+
+          // cps = {
+            // b: {x: cps.a.x + lastPath.x2, y: cps.a.y + lastPath.y2},
+            // a: {x: cps.b.x + lastPath.x2, y: cps.b.y + lastPath.y2}
+          // };
+
+          // if (begCp.x == null) {
+            // $log.info("I only happen the first time.");
+            // begCp = {x: lastPath.x1, y: lastPath.y1};
+          // }
+          // endCp = cps.a;
+
+          // resultString = "C" + begCp.x + " " + begCp.y + ", " + endCp.x + " " + endCp.y + ", " + lastPath.x2 + " " + lastPath.y2 + "\n";
+
+          // begCp = cps.b;
+
+          // $scope.drawingPaths[$scope.pathIndex] += resultString;
+          // // $scope.aCps.push(cps.a);
+          // // $scope.bCps.push(cps.b);
+
+          // lastPath.x1 = lastPath.x2;
+          // lastPath.y1 = lastPath.y2;
+          // lastPath.x2 = x;
+          // lastPath.y2 = y;
+        // }
+        // else {
+          // lastPath.x2 = x;
+          // lastPath.y2 = y;
+        // }
+      }
+
     };
 
     $scope.textListener = function(event, id) {
@@ -171,11 +251,11 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
 ]);
 
 function getX(event) {
-  return event.offsetX == undefined ? event.clientX - $(event.target).offset().left : event.offsetX;
+  return event.pageX - event.delegateTarget.offsetLeft;
 }
 
 function getY(event) {
-  return event.offsetY == undefined ? event.clientY - $(event.target).offset().top : event.offsetY;
+  return event.pageY - event.delegateTarget.offsetTop;
 }
 
 function addText (event, $scope, n) {
@@ -198,6 +278,47 @@ function addText (event, $scope, n) {
     content: ""
   });
 }
+
+// function calcControlPoints(x1,y1,x2,y2) {
+  // var radA = absAngle(x1,y1),
+      // radB = absAngle(x2,y2),
+      // bisect = (radA + radB) / 2,
+      // difference = radB - radA,
+      // bOverLimit = difference > Math.PI,
+      // newBisect = bOverLimit ? bisect : bisect - Math.PI,
+      // tanAB = newBisect + Math.PI/2,
+      // r = 5,
+      // ax = round(Math.cos(tanAB) * r),
+      // ay = round(Math.sin(tanAB) * r),
+      // bx = round(Math.cos(tanAB) * -r),
+      // by = round(Math.sin(tanAB) * -r),
+      // a, b;
+  // a = {x: ax, y: ay},
+  // b = {x: bx, y: by};
+
+  // return {a: a, b: b};
+// }
+
+// // Finds absolute angle based on the atan calculation.
+// // Depending on which quadrant the point is in, the direction of measurement changes.
+// function absAngle(x, y) {
+  // var angle;
+  // if (x != 0) {
+    // angle = Math.atan(y/x);
+    // if      (x > 0 && y >= 0) angle += 0;
+    // else if (x < 0 && y >= 0) angle += Math.PI;
+    // else if (x < 0 && y < 0) angle += Math.PI;
+    // else if (x > 0 && y < 0) angle += 0;
+  // }
+  // // If x is zero, the angle can either be 90 deg (pi/2) or 270 deg (3pi/2)
+  // else angle = (y > 0) ? Math.PI/2 : (3*Math.PI)/2;
+
+  // return angle;
+// }
+
+// function round(x) {
+  // return Math.round(x);
+// }
 
 function clone (obj) {
   return JSON.parse(JSON.stringify(obj));

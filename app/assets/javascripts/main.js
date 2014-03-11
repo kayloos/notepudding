@@ -1,7 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-var notepuddingApp = angular.module('notepuddingApp', ['ui.bootstrap']);
+var notepuddingApp = angular.module('notepuddingApp', ['ui.bootstrap', 'ngTouch']);
 
 // notepuddingApp.config(['$routeProvider',
   // function($routeProvider) {
