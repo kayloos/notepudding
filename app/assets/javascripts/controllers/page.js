@@ -7,8 +7,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         begCp            = {x:null, y:null},
         endCp;
 
-    $scope.aCps = [];
-    $scope.bCps = [];
+    $scope.aCps               = [];
+    $scope.bCps               = [];
     $rootScope.maxPages       = 80;
     $scope.pages              = [];
     $scope.alerts             = [];
