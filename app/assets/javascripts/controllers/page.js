@@ -5,7 +5,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         alertTimeoutTime = 8000,
         lastPath         = {x1: null, y1: null, x2: null, y2: null},
         begCp            = {x:null, y:null},
-        endCp;
+        endCp,
+        threshold        = 8;
 
     $scope.aCps               = [];
     $scope.bCps               = [];
@@ -181,45 +182,6 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         x = getX(event),
         y = getY(event);
         $scope.drawingPaths[$scope.pathIndex] += "L" + x + ", " + y + " ";
-        // if (lastPath.x2 != null && lastPath.y2 != null) {
-          // // Subtract middle vertex from first and last vertex.
-          // // Then we do the calculations, assuming middle vertex is (0,0)
-          // $log.info("All points: " + [lastPath.x1, lastPath.y1, lastPath.x2, lastPath.y2, x, y].join(", "));
-          // ax = lastPath.x1 - lastPath.x2,
-          // ay = lastPath.y1 - lastPath.y2,
-          // bx = x           - lastPath.x2,
-          // by = y           - lastPath.y2;
-
-          // cps = calcControlPoints(ax,ay,bx,by);
-
-          // cps = {
-            // b: {x: cps.a.x + lastPath.x2, y: cps.a.y + lastPath.y2},
-            // a: {x: cps.b.x + lastPath.x2, y: cps.b.y + lastPath.y2}
-          // };
-
-          // if (begCp.x == null) {
-            // $log.info("I only happen the first time.");
-            // begCp = {x: lastPath.x1, y: lastPath.y1};
-          // }
-          // endCp = cps.a;
-
-          // resultString = "C" + begCp.x + " " + begCp.y + ", " + endCp.x + " " + endCp.y + ", " + lastPath.x2 + " " + lastPath.y2 + "\n";
-
-          // begCp = cps.b;
-
-          // $scope.drawingPaths[$scope.pathIndex] += resultString;
-          // // $scope.aCps.push(cps.a);
-          // // $scope.bCps.push(cps.b);
-
-          // lastPath.x1 = lastPath.x2;
-          // lastPath.y1 = lastPath.y2;
-          // lastPath.x2 = x;
-          // lastPath.y2 = y;
-        // }
-        // else {
-          // lastPath.x2 = x;
-          // lastPath.y2 = y;
-        // }
       }
 
     };
@@ -279,46 +241,46 @@ function addText (event, $scope, n) {
   });
 }
 
-// function calcControlPoints(x1,y1,x2,y2) {
-  // var radA = absAngle(x1,y1),
-      // radB = absAngle(x2,y2),
-      // bisect = (radA + radB) / 2,
-      // difference = radB - radA,
-      // bOverLimit = difference > Math.PI,
-      // newBisect = bOverLimit ? bisect : bisect - Math.PI,
-      // tanAB = newBisect + Math.PI/2,
-      // r = 5,
-      // ax = round(Math.cos(tanAB) * r),
-      // ay = round(Math.sin(tanAB) * r),
-      // bx = round(Math.cos(tanAB) * -r),
-      // by = round(Math.sin(tanAB) * -r),
-      // a, b;
-  // a = {x: ax, y: ay},
-  // b = {x: bx, y: by};
+function calcControlPoints(x1,y1,x2,y2) {
+  var radA = absAngle(x1,y1),
+      radB = absAngle(x2,y2),
+      bisect = (radA + radB) / 2,
+      difference = radB - radA,
+      bOverLimit = difference > Math.PI,
+      newBisect = bOverLimit ? bisect : bisect - Math.PI,
+      tanAB = newBisect + Math.PI/2,
+      r = 20,
+      ax = round(Math.cos(tanAB) * r),
+      ay = round(Math.sin(tanAB) * r),
+      bx = round(Math.cos(tanAB) * -r),
+      by = round(Math.sin(tanAB) * -r),
+      a, b;
+  a = {x: ax, y: ay},
+  b = {x: bx, y: by};
 
-  // return {a: a, b: b};
-// }
+  return {a: a, b: b};
+}
 
-// // Finds absolute angle based on the atan calculation.
-// // Depending on which quadrant the point is in, the direction of measurement changes.
-// function absAngle(x, y) {
-  // var angle;
-  // if (x != 0) {
-    // angle = Math.atan(y/x);
-    // if      (x > 0 && y >= 0) angle += 0;
-    // else if (x < 0 && y >= 0) angle += Math.PI;
-    // else if (x < 0 && y < 0) angle += Math.PI;
-    // else if (x > 0 && y < 0) angle += 0;
-  // }
-  // // If x is zero, the angle can either be 90 deg (pi/2) or 270 deg (3pi/2)
-  // else angle = (y > 0) ? Math.PI/2 : (3*Math.PI)/2;
+// Finds absolute angle based on the atan calculation.
+// Depending on which quadrant the point is in, the direction of measurement changes.
+function absAngle(x, y) {
+  var angle;
+  if (x != 0) {
+    angle = Math.atan(y/x);
+    if      (x > 0 && y >= 0) angle += 0;
+    else if (x < 0 && y >= 0) angle += Math.PI;
+    else if (x < 0 && y < 0) angle += Math.PI;
+    else if (x > 0 && y < 0) angle += 0;
+  }
+  // If x is zero, the angle can either be 90 deg (pi/2) or 270 deg (3pi/2)
+  else angle = (y > 0) ? Math.PI/2 : (3*Math.PI)/2;
 
-  // return angle;
-// }
+  return angle;
+}
 
-// function round(x) {
-  // return Math.round(x);
-// }
+function round(x) {
+  return Math.round(x);
+}
 
 function clone (obj) {
   return JSON.parse(JSON.stringify(obj));
