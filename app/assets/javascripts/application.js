@@ -21,7 +21,9 @@
 //= require drawing_logic
 //= require default_page
 //= require main
+//= require directives
+//= require services
+//= require controllers/controls
 //= require controllers/page
 //= require controllers/settings
 //= require controllers/sign_up_in
-//= require directives

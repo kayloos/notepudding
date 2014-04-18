@@ -1,45 +1,45 @@
 <div id="frame"
   ng-controller="PageCtrl"
   ng-style="config.style"
-  ng-mousedown="startDrawingTimer();"
-  ng-click="stopDrawing()"
-  ng-dblclick="shouldActivateDraw = 'ready'"
-  ng-mouseup="stopMoveTarget(); addContent($event); stopDrawing()"
+  ng-mousedown="startAction($event)"
+  ng-mouseup="endAction($event)"
   ng-mousemove="move($event); freehand($event)"
   >
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
-      <path svg ng-repeat="path in drawingPaths" ng-d="{{ path }}" />
+      <path svg ng-d="{{ currentCurve.lineString }}" />
     </g>
-    <circle svg ng-repeat="p in aCps" r="2" fill="red" ng-cx="{{ p.x }}" ng-cy="{{ p.y }}" />
-    <circle svg ng-repeat="p in bCps" r="2" fill="blue" ng-cx="{{ p.x }}" ng-cy="{{ p.y }}" />
   </svg>
-  <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.info}}</alert>
+  <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+    {{ alert.info }}
+  </alert>
   <div class="vertical_divider"></div>
-  <div id="turn_left">
-    <a href="" ng-click="turnLeft()"><%= image_tag "left.png", class: "arrow" %></a>
-  </div>
-  <div id="turn_right">
-    <a href="" ng-click="turnRight()"><%= image_tag "right.png", class: "arrow" %></a>
-  </div>
-  <div id="settings">
-    <a href="" ng-click="settings()"><%= image_tag "settings.png", class: "gear" %></a>
-  </div>
-  <div id="save">
-    <a href="" ng-click="save()" ng-show="userSignedIn"><%= image_tag "save.png", class: "save" %></a>
-  </div>
-  <div id="sign_up" ng-hide="userSignedIn">
-    <a href="" ng-click="signUpIn()"><%= image_tag "sign_up.png", class: "sign_up" %></a>
-  </div>
-  <div id="sign_out" ng-show="userSignedIn">
-    <a href="" ng-click="signOut()"><%= image_tag "sign_out.png", class: "sign_out" %></a>
-  </div>
-  <div id="page_counter">
-    {{currentPageIdx + 1}} / {{maxPages}}
+  <div ng-controller="ControlsCtrl">
+    <div id="turn_left">
+      <a href="" ng-click="turnLeft()"><%= image_tag "left.png", class: "arrow" %></a>
+    </div>
+    <div id="turn_right">
+      <a href="" ng-click="turnRight()"><%= image_tag "right.png", class: "arrow" %></a>
+    </div>
+    <div id="settings">
+      <a href="" ng-click="settings()"><%= image_tag "settings.png", class: "gear" %></a>
+    </div>
+    <div id="save">
+      <a href="" ng-click="save()" ng-show="userSignedIn"><%= image_tag "save.png", class: "save" %></a>
+    </div>
+    <div id="sign_up" ng-hide="userSignedIn">
+      <a href="" ng-click="signUpIn()"><%= image_tag "sign_up.png", class: "sign_up" %></a>
+    </div>
+    <div id="sign_out" ng-show="userSignedIn">
+      <a href="" ng-click="signOut()"><%= image_tag "sign_out.png", class: "sign_out" %></a>
+    </div>
+    <div id="page_counter">
+      {{pad.currentPageIdx + 1}} / {{pad.maxPages}}
+    </div>
   </div>
   <div class="header" ng-style="{backgroundColor: config.style.backgroundColor}"></div>
   <div class="paper">
-    <div ng-repeat="textarea in currentPage.textareas">
+    <div ng-repeat="textarea in pad.currentPage.textareas">
       <div class="textarea-div" ng-style="textarea.divStyle">
         <div class="move"
              ng-show="isFocused || isMoving"
@@ -50,7 +50,7 @@
         <textarea type="text"
           ng-keydown="textListener($event);"
           ng-click="$event.stopPropagation();"
-          ng-model="currentPage.textareas[$index].content"
+          ng-model="textarea.content"
           ng-blur="removeIfEmpty($event, $index); isFocused = false"
           ng-mouseup="rememberDimensions($event, $index)"
           ng-focus="isFocused = true"
