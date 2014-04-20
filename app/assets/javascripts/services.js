@@ -8,7 +8,4 @@ notepuddingApp.factory('pad', function() {
   pad.currentPage = {};
 
   return pad;
-})
-.factory('blank', function() {
-  return {};
 });

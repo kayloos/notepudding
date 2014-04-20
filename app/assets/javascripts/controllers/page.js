@@ -34,21 +34,19 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     $rootScope.closeAlert = function(index) { $rootScope.alerts.splice(index, 1); };
     
     $scope.move = function(event) {
-      if ($scope.isMoving && moveTarget != null) {
+      target = pad.currentPage.textareas[moveTarget];
+      if ($scope.actionState == "moving" && moveTarget != null) {
+
         var x = pen.getX(event) - 5,
             y = pen.getY(event) - 16;
-        pad.currentPage.textareas[moveTarget].divStyle = { top: y + "px", left: x + "px" };
+
+        target.divStyle = { top: y + "px", left: x + "px" };
       }
     };
 
     $scope.moveTheTarget = function($index) {
-      $scope.isMoving = true;
+      $scope.actionState = "moving";
       moveTarget = $index;
-    };
-
-    $scope.stopMoveTarget = function() {
-      $scope.isMoving = false;
-      moveTarget = null;
     };
 
     $scope.textListener = function(event, id) {
@@ -76,11 +74,13 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     $scope.currentPathIdx = 0;
     $scope.curves         = [];
 
-    $scope.currentCurve.points = [{ x: 45, y: 45 }, { x: 45, y: 90 }, { x: 90, y: 90 }, { x: 90, y: 45 },
-                                  { x: 135, y: 45 }, { x: 135, y: 90 }, { x: 180, y: 90 }, { x: 180, y: 45 }];
+    // $scope.currentCurve.points = [{ x: 45, y: 45 }, { x: 45, y: 90 }, { x: 90, y: 90 }, { x: 90, y: 45 },
+                                  // { x: 135, y: 45 }, { x: 135, y: 90 }, { x: 180, y: 90 }, { x: 180, y: 45 }];
     $timeout(function() { saveCurve() }, 100, false);
 
     $scope.startAction = function(event) {
+      if ($scope.actionState != "neutral") return;
+
       $scope.actionState = "drawing_temporary";
 
       $timeout(function() {
@@ -91,10 +91,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     };
 
     $scope.endAction = function(event) {
-      if ($scope.actionState == "neutral") {
-        addText(event, pad.textN++);
-      }
-      else if ($scope.actionState == "drawing_temporary") {
+      if ($scope.actionState == "drawing_temporary") {
         // Remove current curve
         // Add text field, ready for writing
         $scope.currentCurve = emptyCurve;
@@ -104,6 +101,10 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         // Save the current curve
         saveCurve();
       }
+      else if ($scope.actionState == "moving") {
+        moveTarget = null;
+      }
+
       $scope.actionState = "neutral"
     };
 
@@ -166,7 +167,6 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
       $scope.currentCurve.lineString = "";
       $scope.currentCurve.points = [];
       $scope.curves.push(curveString);
-      console.log(curveString);
       // FIXME: Make a function that takes a list of points, and converts it into
       //        an svg-curve, that is smoothed using the smoothing calculations.
       // console.log($scope.currentCurve.points);
@@ -175,10 +175,13 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     addText = function(event, n) {
       if (pad.currentPage.textareas == null)
         pad.currentPage.textareas = []
+
       var x = pen.getX(event),
           y = pen.getY(event);
+
       if (90 < x && x < 140) x = 100;
       if (50 < y)            y = Math.round(y/30) * 30 + 5;
+
       pad.currentPage.textareas.push({
         id: n,
         divStyle: {
@@ -191,6 +194,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         },
         content: ""
       });
+
+
     };
 
   }

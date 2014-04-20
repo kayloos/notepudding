@@ -1,14 +1,13 @@
 <div id="frame"
   ng-controller="PageCtrl"
   ng-style="config.style"
-  ng-click="clickAction($event)"
   ng-mousedown="startAction($event)"
   ng-mouseup="endAction($event)"
   ng-mousemove="move($event); freehand($event)"
   >
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
-      <circle ng-repeat="point in currentCurve.points" cx="{{ point.x }}" cy="{{ point.y }}" r="4" stroke="black" stroke-width="1" fill="red" />
+      <%# <circle ng-repeat="point in currentCurve.points" cx="{{ point.x }}" cy="{{ point.y }}" r="4" stroke="black" stroke-width="1" fill="red" /> %>
       <path svg ng-d="{{ currentCurve.lineString }}" />
       <path svg ng-repeat="curve in curves" ng-d="{{ curve }}" />
     </g>
@@ -45,9 +44,8 @@
     <div ng-repeat="textarea in pad.currentPage.textareas">
       <div class="textarea-div" ng-style="textarea.divStyle">
         <div class="move"
-             ng-show="isFocused || isMoving"
-             ng-mousedown="moveTheTarget($index)"
-             ng-init="isMoving = false">
+             ng-show="textarea.content && (isFocused || actionState == 'moving')"
+             ng-mousedown="moveTheTarget($index)">
           <%= image_tag "move.png", class: "move-icon" %>
         </div>
         <textarea type="text"
