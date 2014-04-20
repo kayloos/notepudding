@@ -29,7 +29,7 @@ production:
   database: notepudding_production
   username: postgres
   password: Rubiksfladjern123
-  port: 5433
+  port: 5432
   pool: 5
   timeout: 5000
 
