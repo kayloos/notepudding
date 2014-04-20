@@ -37,8 +37,10 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     $rootScope.closeAlert = function(index) { $rootScope.alerts.splice(index, 1); };
     
     $scope.move = function(event) {
+      if ($scope.actionState != "moving") return;
+
       target = pad.currentPage.textareas[moveTarget];
-      if ($scope.actionState == "moving" && moveTarget != null) {
+      if (moveTarget != null) {
 
         var x = pen.getX(event) - 5,
             y = pen.getY(event) - 16;

@@ -76,7 +76,9 @@ notepuddingApp.controller('ControlsCtrl',
   };
 
   $scope.turnRight = function() {
-    if (pad.currentPageIdx < pad.maxPages - 1 && (pad.currentPage.textareas.length > 0 || pad.currentPage.curves.length > 0)) {
+    if (pad.currentPageIdx < pad.maxPages - 1 &&
+        (pad.currentPage.textareas && pad.currentPage.textareas.length > 0) ||
+        (pad.currentPage.curves    && pad.currentPage.curves.length > 0)) {
       pad.currentPageIdx++;
       if (!pad.pages[pad.currentPageIdx]) {
         pad.pages[pad.currentPageIdx] = { textareas: [], curves: [], idx: pad.currentPageIdx };

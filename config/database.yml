@@ -27,8 +27,8 @@ production:
   host: localhost
   encoding: unicode
   database: notepudding_production
-  username: notepudding
-  password: s(Jxo#2=Zxi
+  username: postgres
+  password: Rubiksfladjern123
   port: 5433
   pool: 5
   timeout: 5000
