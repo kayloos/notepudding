@@ -12,6 +12,7 @@ function defaultPage() {
         divStyle: {"left":"625px","top":"30px"},
         textareaStyle: {"width":"360px","height":"32px"}
       }
-    ]
+    ],
+    curves: []
   }
 };

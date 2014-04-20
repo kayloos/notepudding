@@ -1,6 +1,6 @@
 notepuddingApp.controller('ControlsCtrl',
-    ['$scope', '$rootScope', '$modal', '$http', '$timeout', 'pad',
-    function ($scope, $rootScope, $modal, $http, $timeout, pad) {
+    ['$scope', '$rootScope', '$modal', '$http', '$timeout', '$log', 'pad',
+    function ($scope, $rootScope, $modal, $http, $timeout, $log, pad) {
 
   $scope.save = function() {
     $http.post('/save_page', {
@@ -70,18 +70,18 @@ notepuddingApp.controller('ControlsCtrl',
 
   $scope.turnLeft = function() {
     if (pad.currentPageIdx > 0) {
-      pad.currentPage = pad.pages[pad.currentPageIdx - 1];
-      pad.textN = pad.currentPage.textareas.length;
       pad.currentPageIdx--;
+      pad.currentPage = pad.pages[pad.currentPageIdx];
     }
   };
 
   $scope.turnRight = function() {
-    if (pad.currentPageIdx < pad.maxPages - 1 && pad.currentPage.textareas.length > 0) {
-      var nextPage = pad.pages[pad.currentPageIdx + 1];
-      pad.currentPage = nextPage ? nextPage : {textareas: [], idx: pad.currentPageIdx + 1};
-      pad.textN = pad.currentPage.textareas.length;
+    if (pad.currentPageIdx < pad.maxPages - 1 && (pad.currentPage.textareas.length > 0 || pad.currentPage.curves.length > 0)) {
       pad.currentPageIdx++;
+      if (!pad.pages[pad.currentPageIdx]) {
+        pad.pages[pad.currentPageIdx] = { textareas: [], curves: [], idx: pad.currentPageIdx };
+      }
+      pad.currentPage = pad.pages[pad.currentPageIdx];
     }
   };
 

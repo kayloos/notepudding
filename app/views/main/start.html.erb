@@ -7,16 +7,15 @@
   >
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
-      <%# <circle ng-repeat="point in currentCurve.points" cx="{{ point.x }}" cy="{{ point.y }}" r="4" stroke="black" stroke-width="1" fill="red" /> %>
       <path svg ng-d="{{ currentCurve.lineString }}" />
-      <path svg ng-repeat="curve in curves" ng-d="{{ curve }}" />
+      <path svg ng-repeat="curve in pad.currentPage.curves" ng-d="{{ curve }}" />
     </g>
   </svg>
-  <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+  <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)" ng-mousedown="$event.stopPropagation();">
     {{ alert.info }}
   </alert>
   <div class="vertical_divider"></div>
-  <div ng-controller="ControlsCtrl">
+  <div ng-controller="ControlsCtrl" ng-mousedown="$event.stopPropagation();"">
     <div id="turn_left">
       <a href="" ng-click="turnLeft()"><%= image_tag "left.png", class: "arrow" %></a>
     </div>

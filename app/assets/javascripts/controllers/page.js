@@ -6,21 +6,24 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         moveTarget        = null;
 
     $scope.pad = pad;
-
     $rootScope.alerts   = [];
 
     if (!$.isEmptyObject(user)) {
       $rootScope.userSignedIn = true;
       pad.pages = user.pages;
+      pad.currentPageIdx = pad.pages.length - 1;
+      pad.currentPage = pad.pages[pad.currentPageIdx];
+
+      if (pad.currentPage.textareas == null)
+        pad.currentPage.textareas = [];
+      if (pad.currentPage.curves == null)
+        pad.currentPage.curves = [];
     }
     else {
       $rootScope.userSignedIn = false;
-      pad.pages[0] = { textareas: [] };
-      // pad.pages[0]        = defaultPage();
+      pad.pages[0] = defaultPage();
+      pad.currentPage = pad.pages[0];
     }
-
-    pad.currentPageIdx = pad.pages.length - 1;
-    pad.currentPage    = pad.pages[pad.currentPageIdx];
 
     $rootScope.config = {
       style: {
@@ -71,8 +74,6 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     $scope.actionState    = "neutral";
     emptyCurve = { lineString: "", points: [] }
     $scope.currentCurve   = emptyCurve;
-    $scope.currentPathIdx = 0;
-    $scope.curves         = [];
 
     // $scope.currentCurve.points = [{ x: 45, y: 45 }, { x: 45, y: 90 }, { x: 90, y: 90 }, { x: 90, y: 45 },
                                   // { x: 135, y: 45 }, { x: 135, y: 90 }, { x: 180, y: 90 }, { x: 180, y: 45 }];
@@ -95,7 +96,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         // Remove current curve
         // Add text field, ready for writing
         $scope.currentCurve = emptyCurve;
-        addText(event, pad.textN++);
+        addText(event, pad.currentPage.textareas.length);
       }
       else if ($scope.actionState == "drawing_permanent") {
         // Save the current curve
@@ -166,7 +167,13 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
 
       $scope.currentCurve.lineString = "";
       $scope.currentCurve.points = [];
-      $scope.curves.push(curveString);
+
+      if (pad.currentPage.curves == undefined)
+        pad.currentPage.curves = [];
+
+      if (curveString != "" && curveString != undefined)
+        pad.currentPage.curves.push(curveString);
+
       // FIXME: Make a function that takes a list of points, and converts it into
       //        an svg-curve, that is smoothed using the smoothing calculations.
       // console.log($scope.currentCurve.points);
