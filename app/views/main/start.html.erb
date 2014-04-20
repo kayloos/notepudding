@@ -15,7 +15,7 @@
     {{ alert.info }}
   </alert>
   <div class="vertical_divider"></div>
-  <div ng-controller="ControlsCtrl" ng-mousedown="$event.stopPropagation();"">
+  <div ng-controller="ControlCtrl" ng-mousedown="$event.stopPropagation();"">
     <div id="turn_left">
       <a href="" ng-click="turnLeft()"><%= image_tag "left.png", class: "arrow" %></a>
     </div>

@@ -1,4 +1,4 @@
-notepuddingApp.controller('ControlsCtrl',
+notepuddingApp.controller('ControlCtrl',
     ['$scope', '$rootScope', '$modal', '$http', '$timeout', '$log', 'pad',
     function ($scope, $rootScope, $modal, $http, $timeout, $log, pad) {
 
