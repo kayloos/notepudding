@@ -2,7 +2,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
   function ($scope, $rootScope, $timeout, $modal, $http, $log, pad) {
     var user              = getUser(),
         lastPath          = { x1: null, y1: null, x2: null, y2: null},
-        distanceThreshold = 2,
+        distanceThreshold = 6,
         moveTarget        = null;
 
     $scope.pad = pad;
@@ -15,7 +15,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     }
     else {
       $rootScope.userSignedIn = false;
-      pad.pages[0]        = defaultPage();
+      pad.pages[0] = { textareas: [] };
+      // pad.pages[0]        = defaultPage();
     }
 
     pad.currentPageIdx = pad.pages.length - 1;
@@ -69,37 +70,45 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
       pad.currentPage.textareas[idx].textareaStyle.height = target.outerHeight() + "px";
     };
 
-    actionState    = "neutral";
+    $scope.actionState    = "neutral";
     emptyCurve = { lineString: "", points: [] }
     $scope.currentCurve   = emptyCurve;
     $scope.currentPathIdx = 0;
     $scope.curves         = [];
 
+    $scope.currentCurve.points = [{ x: 45, y: 45 }, { x: 45, y: 90 }, { x: 90, y: 90 }, { x: 90, y: 45 },
+                                  { x: 135, y: 45 }, { x: 135, y: 90 }, { x: 180, y: 90 }, { x: 180, y: 45 }];
+    $timeout(function() { saveCurve() }, 100, false);
+
     $scope.startAction = function(event) {
-      actionState = "drawing_temporary";
+      $scope.actionState = "drawing_temporary";
 
       $timeout(function() {
-        if (actionState == "drawing_temporary")
-          actionState = "drawing_permanent";
+        if ($scope.actionState == "drawing_temporary") {
+          $scope.actionState = "drawing_permanent";
+        }
       }, 100, false);
     };
 
     $scope.endAction = function(event) {
-      if (actionState == "drawing_temporary") {
+      if ($scope.actionState == "neutral") {
+        addText(event, pad.textN++);
+      }
+      else if ($scope.actionState == "drawing_temporary") {
         // Remove current curve
         // Add text field, ready for writing
         $scope.currentCurve = emptyCurve;
         addText(event, pad.textN++);
       }
-      else if (actionState == "drawing_permanent") {
+      else if ($scope.actionState == "drawing_permanent") {
         // Save the current curve
         saveCurve();
       }
-      actionState = "neutral"
+      $scope.actionState = "neutral"
     };
 
     $scope.freehand = function(event) {
-      if (actionState == "drawing_temporary" || actionState == "drawing_permanent") {
+      if ($scope.actionState == "drawing_temporary" || $scope.actionState == "drawing_permanent") {
         x = pen.getX(event),
         y = pen.getY(event);
         x0 = lastPath.x1, y0 = lastPath.y1;
@@ -116,10 +125,51 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     };
 
     saveCurve = function() {
+      var curveString = "",
+          prevEndCp = "",
+          i = 1;
+
+      while (i < $scope.currentCurve.points.length) {
+        currentPoint = $scope.currentCurve.points[i];
+        prevPoint    = $scope.currentCurve.points[i-1];
+        nextPoint    = $scope.currentCurve.points[i+1];
+
+        targetPoint = currentPoint.x + " " + currentPoint.y;
+
+        // At the end of the array, we still want to add the last point
+        if (nextPoint === undefined) {
+          curveString += "C" + prevEndCp + ", " + targetPoint + ", " + targetPoint + "\n";
+          break;
+        }
+
+        if (prevEndCp === "") {
+          cpA         = prevPoint.x + " " + prevPoint.y;
+          curveString += "M " + cpA + "\n";
+        }
+
+        else {
+          cpA         = prevEndCp;
+        }
+
+        result = pen.calcControlPoints(subtractPoints(prevPoint, currentPoint), subtractPoints(nextPoint, currentPoint));
+        cpB         = (result.a.x + currentPoint.x) + " " + (result.a.y + currentPoint.y);
+        curveString += "C" + cpA + ", " + cpB + ", " + targetPoint + "\n";
+
+        prevEndCp = (result.b.x + currentPoint.x) + " " + (result.b.y + currentPoint.y);
+
+        if (i >= $scope.currentCurve.points.length - 4)
+          i += 1;
+        else
+          i += 3;
+      }
+
+      $scope.currentCurve.lineString = "";
+      $scope.currentCurve.points = [];
+      $scope.curves.push(curveString);
+      console.log(curveString);
       // FIXME: Make a function that takes a list of points, and converts it into
       //        an svg-curve, that is smoothed using the smoothing calculations.
-      console.log($scope.currentCurve.points);
-      return undefined
+      // console.log($scope.currentCurve.points);
     };
 
     addText = function(event, n) {
@@ -146,24 +196,6 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
   }
 ]);
 
-function addText(event, n) {
-  if (pad.currentPage.textareas == null)
-    pad.currentPage.textareas = []
-  var x = pen.getX(event),
-      y = pen.getY(event);
-  if (90 < x && x < 140) x = 100;
-  if (50 < y)            y = Math.round(y/30) * 30 + 5;
-  pad.currentPage.textareas.push({
-    id: n,
-    divStyle: {
-      left: x + "px",
-      top: y + "px",
-    },
-    textareaStyle: {
-      width: "360px",
-      height: "30px",
-    },
-    content: ""
-  });
-};
-
+function subtractPoints(p1, p2) {
+  return { x: p1.x - p2.x, y: p1.y - p2.y };
+}

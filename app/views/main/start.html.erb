@@ -1,13 +1,16 @@
 <div id="frame"
   ng-controller="PageCtrl"
   ng-style="config.style"
+  ng-click="clickAction($event)"
   ng-mousedown="startAction($event)"
   ng-mouseup="endAction($event)"
   ng-mousemove="move($event); freehand($event)"
   >
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
+      <circle ng-repeat="point in currentCurve.points" cx="{{ point.x }}" cy="{{ point.y }}" r="4" stroke="black" stroke-width="1" fill="red" />
       <path svg ng-d="{{ currentCurve.lineString }}" />
+      <path svg ng-repeat="curve in curves" ng-d="{{ curve }}" />
     </g>
   </svg>
   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
@@ -50,6 +53,7 @@
         <textarea type="text"
           ng-keydown="textListener($event);"
           ng-click="$event.stopPropagation();"
+          ng-mousedown="$event.stopPropagation();"
           ng-model="textarea.content"
           ng-blur="removeIfEmpty($event, $index); isFocused = false"
           ng-mouseup="rememberDimensions($event, $index)"
