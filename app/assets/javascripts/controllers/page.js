@@ -38,12 +38,13 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
     
     $scope.move = function(event) {
       if ($scope.actionState != "moving") return;
+      event.preventDefault();
 
       target = pad.currentPage.textareas[moveTarget];
       if (moveTarget != null) {
 
-        var x = pen.getX(event) - 5,
-            y = pen.getY(event) - 16;
+        var x = pen.getX(event) + 8,
+            y = pen.getY(event) + 7;
 
         target.divStyle = { top: y + "px", left: x + "px" };
       }

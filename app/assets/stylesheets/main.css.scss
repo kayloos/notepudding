@@ -25,6 +25,7 @@ body {
   height: 100%;
   border: 1px solid rgba(0,0,0,0.4);
   border-top: 0; border-bottom: 0;
+  cursor: default;
 }
 #frame > svg {
   position: absolute;
@@ -120,12 +121,13 @@ body {
   position: absolute;
   left: -20px;
   top: -20px;
+  cursor: move;
 }
 .move-icon {
   width: 24px;
   height: 24px;
   opacity: 0.1;
-  cursor: pointer;
+  cursor: move;
 }
 .move-icon:hover {
   opacity: 0.5
