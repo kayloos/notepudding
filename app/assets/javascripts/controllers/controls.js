@@ -1,15 +1,9 @@
 notepuddingApp.controller('ControlCtrl',
-    ['$scope', '$rootScope', '$modal', '$http', '$timeout', '$log', 'pad',
-    function ($scope, $rootScope, $modal, $http, $timeout, $log, pad) {
+    ['$scope', '$rootScope', '$modal', '$http', '$timeout', '$log', 'pad', 'userControls',
+    function ($scope, $rootScope, $modal, $http, $timeout, $log, pad, userControls) {
 
   $scope.save = function() {
-    $http.post('/save_page', {
-      pages_dump: pad.pages
-    }).success(function(data) {
-      timeoutAlert({ type: "success", info: "Saved pages successfully" });
-    }).error(function(data) {
-      timeoutAlert({ type: "danger", info: "Could not save pages" });
-    });
+    userControls.save()
   };
 
   $scope.signUpIn = function() {
@@ -63,6 +57,7 @@ notepuddingApp.controller('ControlCtrl',
 
     modalInstance.result.then(function (newConfig) {
       $rootScope.config = newConfig;
+      userControls.save();
     }, function () {
       $log.info('Modal dismissed at: ' + new Date());
     });

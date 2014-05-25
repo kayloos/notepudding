@@ -1,5 +1,5 @@
-notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$modal', '$http', '$log', 'pad',
-  function ($scope, $rootScope, $timeout, $modal, $http, $log, pad) {
+notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$http', '$log', 'pad',
+  function ($scope, $rootScope, $timeout, $http, $log, pad) {
     var user              = getUser(),
         lastPath          = { x1: null, y1: null, x2: null, y2: null},
         distanceThreshold = 6,
@@ -7,6 +7,15 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
 
     $scope.pad = pad;
     $rootScope.alerts   = [];
+
+    var defaultConfig = {
+      style: {
+        fontSize: "18px",
+        fontFamily: "Helvetica Neue",
+        width: "800px",
+        backgroundColor: "#FFFFC3"
+      }
+    };
 
     if (!$.isEmptyObject(user)) {
       $rootScope.userSignedIn = true;
@@ -18,24 +27,22 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
         pad.currentPage.textareas = [];
       if (pad.currentPage.curves == null)
         pad.currentPage.curves = [];
+
+      if (user.config != null)
+        $rootScope.config = user.config;
+      else $rootScope.config = defaultConfig;
     }
     else {
       $rootScope.userSignedIn = false;
       pad.pages[0] = defaultPage();
       pad.currentPage = pad.pages[0];
+
+      $rootScope.config = defaultConfig;
     }
 
-    $rootScope.config = {
-      style: {
-        fontSize: "18px",
-        fontFamily: "Helvetica Neue",
-        width: "800px",
-        backgroundColor: "#FFFFC3"
-      }
-    };
 
     $rootScope.closeAlert = function(index) { $rootScope.alerts.splice(index, 1); };
-    
+
     $scope.move = function(event) {
       if ($scope.actionState != "moving") return;
       event.preventDefault();
@@ -177,9 +184,6 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$mod
       if (curveString != "" && curveString != undefined)
         pad.currentPage.curves.push(curveString);
 
-      // FIXME: Make a function that takes a list of points, and converts it into
-      //        an svg-curve, that is smoothed using the smoothing calculations.
-      // console.log($scope.currentCurve.points);
     };
 
     addText = function(event, n) {

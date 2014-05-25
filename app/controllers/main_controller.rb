@@ -3,8 +3,9 @@ class MainController < ApplicationController
   def start
     if user_signed_in?
       @user = {
-        :email => current_user.email,
-        :pages => current_user.pages.any? ? current_user.pages.first.pages_dump : [{textareas: []}]
+        email:  current_user.email,
+        pages:  current_user.pages.any? ? current_user.pages.first.pages_dump : [{textareas: []}],
+        config: current_user.pages.first.config
       }.to_json
     else
       @user = {}
@@ -17,6 +18,7 @@ class MainController < ApplicationController
     if current_user.pages.any?
       page = current_user.pages.first
       page.pages_dump = params[:pages_dump]
+      page.config = params[:config]
       page.save
     else
       current_user.pages << Page.new(pages_dump: params[:pages_dump])
