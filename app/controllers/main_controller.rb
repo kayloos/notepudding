@@ -6,41 +6,42 @@ class MainController < ApplicationController
     if user_signed_in?
       @user = {
         email:  current_user.email,
-        pages:  current_user.pages.any? ? current_user.pages.first.pages_dump : [{textareas: []}],
-        config: current_user.pages.first.config
-      }.to_json
+        pages:  current_user.pages_dump,
+        config: current_user.config
+      }
     else
       @user = {}
     end
+    @user = @user.to_json
   end
 
-  def save_page
-    if current_user.pages.any?
-      page = current_user.pages.first
-      page.pages_dump = params[:pages_dump]
-      page.config = params[:config]
-      page.save
+  def save_pad
+    if current_user.pads.any?
+      pad            = current_user.pads.first
+      pad.pages_dump = params[:pages_dump]
+      pad.config     = params[:config]
+      pad.save
     else
-      current_user.pages << Page.new(pages_dump: params[:pages_dump])
+      current_user.pads << Pad.new(pages_dump: params[:pages_dump])
     end
 
-    render :status => 200,
-           :json => {
-             :type => "success"
+    render status: 200,
+           json: {
+             type: "success"
            }
   end
 
-  def get_pages
-    if current_user.pages.any?
-      pages = current_user.pages.first.pages_dump
+  def get_pad
+    if current_user.pads.any?
+      pages = current_user.pads.first.pages_dump
     else
-      pages = [{textareas: []}]
+      pages = [{textareas: []}] # FIXME: Use default_pad
     end
 
-    render :status => 200,
-           :json => {
-             :type => "success",
-             :pages => pages
+    render status: 200,
+           json: {
+             type: "success",
+             pages: pages
            }
   end
 end
