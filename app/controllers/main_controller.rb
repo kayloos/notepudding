@@ -1,5 +1,7 @@
 class MainController < ApplicationController
   require 'json'
+
+  before_filter :authenticate_user!, except: :start
   def start
     if user_signed_in?
       @user = {
@@ -13,8 +15,6 @@ class MainController < ApplicationController
   end
 
   def save_page
-    authenticate_user!
-
     if current_user.pages.any?
       page = current_user.pages.first
       page.pages_dump = params[:pages_dump]
@@ -31,8 +31,6 @@ class MainController < ApplicationController
   end
 
   def get_pages
-    authenticate_user!
-
     if current_user.pages.any?
       pages = current_user.pages.first.pages_dump
     else

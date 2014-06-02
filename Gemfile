@@ -7,9 +7,13 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 1.2'
 gem 'devise'
+gem 'rspec-rails'
 
 group :development do
   gem 'pry'
+end
+
+group :test do
 end
 
 # Use unicorn as the app server
