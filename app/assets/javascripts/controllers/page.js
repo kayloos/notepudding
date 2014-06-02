@@ -9,6 +9,12 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
     $rootScope.alerts   = [];
 
     var defaultConfig = {
+      style: {
+        fontSize: "18px",
+        fontFamily: "Helvetica Neue",
+        width: "800px",
+        backgroundColor: "#FFFFC3"
+      }
     };
 
     if (!$.isEmptyObject(user)) {

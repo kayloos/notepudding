@@ -6,27 +6,23 @@ class User < ActiveRecord::Base
 
   has_many :pads
 
-  def default_config
-    {
-      style: {
-        fontSize: "18px",
-        fontFamily: "Helvetica Neue",
-        width: "800px",
-        backgroundColor: "#FFFFC3"
-      }
+  DEFAULT_CONFIG = {
+    style: {
+      fontSize: "18px",
+      fontFamily: "Helvetica Neue",
+      width: "800px",
+      backgroundColor: "#FFFFC3"
     }
-  end
+  }
 
-  def default_pad
-    [{textareas: []}]
-  end
+  DEFAULT_PAD = [{ textareas: [] }]
 
   def config
-    pads.any? ? current_pad.config : default_config
+    pads.any? ? current_pad.config : DEFAULT_CONFIG
   end
 
   def pages_dump
-    pads.any? ? current_pad.pages_dump : default_pad
+    pads.any? ? current_pad.pages_dump : DEFAULT_PAD
   end
 
   def current_pad
