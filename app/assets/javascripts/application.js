@@ -17,12 +17,13 @@
 //= require angular
 //= require angular-touch
 //= require angular-ui
-//= require raphael
 //= require drawing_logic
 //= require default_page
+//= require marked
 //= require main
 //= require directives
 //= require services
+//= require filters
 //= require controllers/controls
 //= require controllers/page
 //= require controllers/settings

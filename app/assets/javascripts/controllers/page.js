@@ -98,7 +98,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
         if ($scope.actionState == "drawing_temporary") {
           $scope.actionState = "drawing_permanent";
         }
-      }, 100, false);
+      }, 175, false);
     };
 
     $scope.endAction = function(event) {
