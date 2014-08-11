@@ -216,12 +216,6 @@ notepuddingApp.controller('PageCtrl',
 
         rx = (x - tx) + "px";
         ry = (y - ty) + "px";
-        console.log(x);
-        console.log(y);
-        console.log(tx);
-        console.log(ty);
-        console.log(rx);
-        console.log(ry);
 
         target.textareaStyle.height = ry;
         target.textareaStyle.width  = rx;
