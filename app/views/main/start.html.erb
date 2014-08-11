@@ -3,7 +3,7 @@
   ng-style="config.style"
   ng-mousedown="startAction($event)"
   ng-mouseup="endAction($event)"
-  ng-mousemove="move($event); freehand($event); resize($event)"
+  ng-mousemove="moveAction($event); freehand($event); resize($event)"
   >
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
@@ -58,7 +58,6 @@
           ng-mousedown="$event.stopPropagation();"
           ng-model="textarea.content"
           ng-blur="removeIfEmpty($event, $index); isFocused = false"
-          ng-mouseup="rememberDimensions($event, $index)"
           ng-focus="isFocused = true"
           ng-init="isFocused = false"
           ng-style="textarea.textareaStyle"

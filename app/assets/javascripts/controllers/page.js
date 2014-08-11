@@ -1,48 +1,45 @@
-notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$http', '$log', 'pad',
-  function ($scope, $rootScope, $timeout, $http, $log, pad) {
+notepuddingApp.controller('PageCtrl',
+  ['$scope', '$rootScope', '$timeout', '$http', 'pad',
+  function ($scope, $rootScope, $timeout, $http, pad) {
     var user              = getUser(),
         lastPath          = { x1: null, y1: null, x2: null, y2: null },
         distanceThreshold = 6,
         moveTarget        = null,
-        resizeTarget      = null;
+        resizeTarget      = null,
+        emptyCurve        = { lineString: "", points: [] };
 
     $scope.pad        = pad;
     $rootScope.alerts = [];
 
+    $scope.actionState  = "neutral";
+    $scope.currentCurve = emptyCurve;
+
     $rootScope.config = {
       style: {
-        fontSize: "18px",
-        fontFamily: "Helvetica Neue",
-        width: "800px",
+        fontSize:        "18px",
+        fontFamily:      "Helvetica Neue",
+        width:           "800px",
         backgroundColor: "#FFFFC3"
       }
     };
 
-    if ($.isEmptyObject(user)) {
-      $rootScope.userSignedIn = false;
-      pad.pages[0] = defaultPage();
-      pad.currentPage = pad.pages[0];
-    }
-    else {
-      $rootScope.userSignedIn = true;
-      pad.pages               = user.pages;
-      pad.currentPageIdx      = pad.pages.length - 1;
-      pad.currentPage         = pad.pages[pad.currentPageIdx];
+    pad.fillOutPage(user);
 
-      if (pad.currentPage.textareas == null)
-        pad.currentPage.textareas = [];
-      if (pad.currentPage.curves == null)
-        pad.currentPage.curves = [];
+    $rootScope.closeAlert = function(index) {
+      $rootScope.alerts.splice(index, 1);
+    };
 
-      if (user.config != null)
-        $rootScope.config = user.config;
-    }
+    $scope.moveAction = function(event) {
+      if ($scope.actionState == "moving")
+        move(event);
+      if ($scope.actionState == "drawing_temporary" ||
+          $scope.actionState == "drawing_permanent")
+        freehand(event);
+      if ($scope.actionState == "resizing")
+        resize(event);
+    };
 
-
-    $rootScope.closeAlert = function(index) { $rootScope.alerts.splice(index, 1); };
-
-    $scope.move = function(event) {
-      if ($scope.actionState != "moving") return;
+    move = function(event) {
       event.preventDefault();
 
       target = pad.currentPage.textareas[moveTarget];
@@ -61,31 +58,19 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
     };
 
     $scope.textListener = function(event, id) {
-      // $timeout logic due to a problem with angular (blur gets called synchronously and collides with keydown)
-      // source: http://stackoverflow.com/questions/18389527/angularjs-submit-on-blur-and-blur-on-keypress
+      // $timeout logic due to a problem with angular (blur gets called
+      // synchronously and collides with keydown) source:
+      // http://stackoverflow.com/questions/18389527/angularjs-submit-on-blur-and-blur-on-keypress
       var target = event.target || event.srcElement;
-      if (event.keyCode == 27) $timeout(function () { target.blur() }, 0, false);
+      if (event.keyCode == 27) $timeout(function () {
+        target.blur()
+      }, 0, false);
     };
 
     $scope.removeIfEmpty = function(event, idx) {
       var target = event.target || event.srcElement;
       if ($(target).val() == "") pad.currentPage.textareas.splice(idx, 1);
     };
-
-    // When resizing textarea using the browser we want the new size of the textarea to persist.
-    $scope.rememberDimensions = function(event, idx) {
-      var target = $(event.delegateTarget);
-      pad.currentPage.textareas[idx].textareaStyle.width  = target.outerWidth() + "px";
-      pad.currentPage.textareas[idx].textareaStyle.height = target.outerHeight() + "px";
-    };
-
-    $scope.actionState  = "neutral";
-    emptyCurve          = { lineString: "", points: [] }
-    $scope.currentCurve = emptyCurve;
-
-    // $scope.currentCurve.points = [{ x: 45, y: 45 }, { x: 45, y: 90 }, { x: 90, y: 90 }, { x: 90, y: 45 },
-                                  // { x: 135, y: 45 }, { x: 135, y: 90 }, { x: 180, y: 90 }, { x: 180, y: 45 }];
-    $timeout(function() { saveCurve() }, 100, false);
 
     $scope.startAction = function(event) {
       if ($scope.actionState != "neutral") return;
@@ -96,7 +81,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
         if ($scope.actionState == "drawing_temporary") {
           $scope.actionState = "drawing_permanent";
         }
-      }, 175, false);
+      }, 200, false);
     };
 
     $scope.endAction = function(event) {
@@ -120,20 +105,18 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
       $scope.actionState = "neutral"
     };
 
-    $scope.freehand = function(event) {
-      if ($scope.actionState == "drawing_temporary" || $scope.actionState == "drawing_permanent") {
-        x = pen.getX(event),
-        y = pen.getY(event);
-        x0 = lastPath.x1, y0 = lastPath.y1;
+    freehand = function(event) {
+      x = pen.getX(event),
+      y = pen.getY(event);
+      x0 = lastPath.x1, y0 = lastPath.y1;
 
-        if (pen.distance(x, y, x0, y0) > distanceThreshold) {
-          var startLetter = $scope.currentCurve.lineString.length > 0 ? "L" : "M"
+      if (pen.distance(x, y, x0, y0) > distanceThreshold) {
+        var startLetter = $scope.currentCurve.lineString.length > 0 ? "L" : "M"
 
-          $scope.currentCurve.lineString += startLetter + x + ", " + y
-          $scope.currentCurve.points.push({ x: x, y: y });
+        $scope.currentCurve.lineString += startLetter + x + ", " + y
+        $scope.currentCurve.points.push({ x: x, y: y });
 
-          lastPath.x1 = x, lastPath.y1 = y;
-        }
+        lastPath.x1 = x, lastPath.y1 = y;
       }
     };
 
@@ -151,7 +134,8 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
 
         // At the end of the array, we still want to add the last point
         if (nextPoint === undefined) {
-          curveString += "C" + prevEndCp + ", " + targetPoint + ", " + targetPoint + "\n";
+          curveString += "C" + prevEndCp + ", "
+                         + targetPoint + ", " + targetPoint + "\n";
           break;
         }
 
@@ -164,10 +148,13 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
           cpA = prevEndCp;
         }
 
-        result       = pen.calcControlPoints(subtractPoints(prevPoint, currentPoint), subtractPoints(nextPoint, currentPoint));
-        cpB          = (result.a.x + currentPoint.x) + " " + (result.a.y + currentPoint.y);
+        result       = pen.calcControlPoints(subtractPoints(prevPoint, currentPoint),
+                                             subtractPoints(nextPoint, currentPoint));
+        cpB          = (result.a.x + currentPoint.x) + " "
+                       + (result.a.y + currentPoint.y);
         curveString += "C" + cpA + ", " + cpB + ", " + targetPoint + "\n";
-        prevEndCp    = (result.b.x + currentPoint.x) + " " + (result.b.y + currentPoint.y);
+        prevEndCp    = (result.b.x + currentPoint.x) + " "
+                       + (result.b.y + currentPoint.y);
 
         if (i >= $scope.currentCurve.points.length - 4)
           i += 1;
@@ -176,7 +163,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
       }
 
       $scope.currentCurve.lineString = "";
-      $scope.currentCurve.points = [];
+      $scope.currentCurve.points     = [];
 
       if (pad.currentPage.curves == undefined)
         pad.currentPage.curves = [];
@@ -200,27 +187,26 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
         id: n,
         divStyle: {
           left: x + "px",
-          top: y + "px",
+          top:  y + "px",
         },
         textareaStyle: {
-          width: "360px",
+          width:  "360px",
           height: "30px",
         },
         content: ""
       });
     };
 
-    $scope.resize = function(event) {
-      if ($scope.actionState != "resizing") return;
+    resize = function(event) {
       event.preventDefault();
 
       target = pad.currentPage.textareas[resizeTarget];
       if (resizeTarget != null) {
 
-        var x = pen.getX(event) - 65,
-            y = pen.getY(event) + 55;
+        var x = pen.getX(event),
+            y = pen.getY(event);
 
-        var tx, ty;
+        var tx, ty, rx, ry;
 
         tx = target.divStyle.top;
         ty = target.divStyle.left;
@@ -228,13 +214,23 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
         tx = tx.substring(0, tx.length-2);
         ty = ty.substring(0, ty.length-2);
 
-        target.textareaStyle.height = (y - ty) + "px";
-        target.textareaStyle.width = (x - tx) + "px";
+        rx = (x - tx) + "px";
+        ry = (y - ty) + "px";
+        console.log(x);
+        console.log(y);
+        console.log(tx);
+        console.log(ty);
+        console.log(rx);
+        console.log(ry);
+
+        target.textareaStyle.height = ry;
+        target.textareaStyle.width  = rx;
       }
     };
+
     $scope.resizeElement = function(index) {
       $scope.actionState = "resizing";
-      resizeTarget = index;
+      resizeTarget       = index;
     };
   }
 ]);
