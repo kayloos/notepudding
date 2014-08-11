@@ -15,6 +15,7 @@
 //= require jquery.autosize
 //= require underscore
 //= require angular
+//= require angular-sanitize
 //= require angular-touch
 //= require angular-ui
 //= require drawing_logic
@@ -28,3 +29,4 @@
 //= require controllers/page
 //= require controllers/settings
 //= require controllers/sign_up_in
+

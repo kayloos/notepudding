@@ -38,7 +38,7 @@
       {{pad.currentPageIdx + 1}} / {{pad.maxPages}}
     </div>
   </div>
-  <div class="header" ng-style="{backgroundColor: config.style.backgroundColor}"></div>
+  <div class="header" ng-style="{ backgroundColor: config.style.backgroundColor }"></div>
   <div class="paper">
     <div ng-repeat="textarea in pad.currentPage.textareas">
       <div class="textarea-div" ng-style="textarea.divStyle">
@@ -62,10 +62,15 @@
           ng-init="isFocused = false"
           ng-style="textarea.textareaStyle"
           focused-on="$last"
+          ng-show="isFocused"
           autosize
-          class="text_area">
+          class="textarea">
         </textarea>
-    </div>
+        <div class="rendered_textarea"
+          ng-model="textarea.content" ng-bind-html="textarea.content | markdown"
+          ng-hide="isFocused" ng-click="isFocused = true">
+        </div>
+      </div>
     </div>
   </div>
   <%= render 'settings' %>
