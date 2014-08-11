@@ -12,7 +12,7 @@ class MySessionsController < Devise::SessionsController
                        :password_confirmation => user[:password])
       if @user.valid?
         @user.save
-        @user.pages << Page.new({:pages_dump => params[:pages_dump]})
+        @user.pads << Pad.new({:pages_dump => params[:pages_dump]})
         info = "Successfully created and signed user in as " + user[:email]
       else
         info = "Validation errors: " + @user.errors.full_messages.join(", ")
@@ -21,8 +21,9 @@ class MySessionsController < Devise::SessionsController
     end
 
     warden.authenticate(:scope => resource_name, :recall => "#{controller_path}#failure")
+
     if user_signed_in?
-      user = {:email => current_user.email, :pages => current_user.pages.any? ? current_user.pages.first.pages_dump : [{textareas: []}]}
+      user = {:email => current_user.email, :pads => current_user.pads.any? ? current_user.pads.first.pages_dump : [{textareas: []}]}
     else
       if type != "danger"
         type = "danger"
