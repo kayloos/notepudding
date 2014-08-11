@@ -1,12 +1,12 @@
 notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$http', '$log', 'pad',
   function ($scope, $rootScope, $timeout, $http, $log, pad) {
     var user              = getUser(),
-        lastPath          = { x1: null, y1: null, x2: null, y2: null},
+        lastPath          = { x1: null, y1: null, x2: null, y2: null },
         distanceThreshold = 6,
         moveTarget        = null;
 
-    $scope.pad = pad;
-    $rootScope.alerts   = [];
+    $scope.pad        = pad;
+    $rootScope.alerts = [];
 
     var defaultConfig = {
       style: {
@@ -74,16 +74,16 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
       if ($(target).val() == "") pad.currentPage.textareas.splice(idx, 1);
     };
 
-    // When resizing using the browser we want the new size of the textarea to persist.
+    // When resizing textarea using the browser we want the new size of the textarea to persist.
     $scope.rememberDimensions = function(event, idx) {
       var target = $(event.delegateTarget);
       pad.currentPage.textareas[idx].textareaStyle.width  = target.outerWidth() + "px";
       pad.currentPage.textareas[idx].textareaStyle.height = target.outerHeight() + "px";
     };
 
-    $scope.actionState    = "neutral";
-    emptyCurve = { lineString: "", points: [] }
-    $scope.currentCurve   = emptyCurve;
+    $scope.actionState  = "neutral";
+    emptyCurve          = { lineString: "", points: [] }
+    $scope.currentCurve = emptyCurve;
 
     // $scope.currentCurve.points = [{ x: 45, y: 45 }, { x: 45, y: 90 }, { x: 90, y: 90 }, { x: 90, y: 45 },
                                   // { x: 135, y: 45 }, { x: 135, y: 90 }, { x: 180, y: 90 }, { x: 180, y: 45 }];
@@ -155,19 +155,18 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
         }
 
         if (prevEndCp === "") {
-          cpA         = prevPoint.x + " " + prevPoint.y;
+          cpA          = prevPoint.x + " " + prevPoint.y;
           curveString += "M " + cpA + "\n";
         }
 
         else {
-          cpA         = prevEndCp;
+          cpA = prevEndCp;
         }
 
-        result = pen.calcControlPoints(subtractPoints(prevPoint, currentPoint), subtractPoints(nextPoint, currentPoint));
-        cpB         = (result.a.x + currentPoint.x) + " " + (result.a.y + currentPoint.y);
+        result       = pen.calcControlPoints(subtractPoints(prevPoint, currentPoint), subtractPoints(nextPoint, currentPoint));
+        cpB          = (result.a.x + currentPoint.x) + " " + (result.a.y + currentPoint.y);
         curveString += "C" + cpA + ", " + cpB + ", " + targetPoint + "\n";
-
-        prevEndCp = (result.b.x + currentPoint.x) + " " + (result.b.y + currentPoint.y);
+        prevEndCp    = (result.b.x + currentPoint.x) + " " + (result.b.y + currentPoint.y);
 
         if (i >= $scope.currentCurve.points.length - 4)
           i += 1;
@@ -208,10 +207,7 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
         },
         content: ""
       });
-
-
     };
-
   }
 ]);
 
