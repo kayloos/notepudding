@@ -3,7 +3,7 @@
   ng-style="config.style"
   ng-mousedown="startAction($event)"
   ng-mouseup="endAction($event)"
-  ng-mousemove="move($event); freehand($event)"
+  ng-mousemove="move($event); freehand($event); resize($event)"
   >
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
@@ -45,7 +45,12 @@
         <div class="move"
              ng-show="textarea.content && (isFocused || actionState == 'moving')"
              ng-mousedown="moveTheTarget($index)">
-          <%= image_tag "move.png", class: "move-icon" %>
+          <span class="glyphicon glyphicon-move"></span>
+        </div>
+        <div class="resize"
+          ng-show="textarea.content && (isFocused || actionState == 'resizing')"
+          ng-mousedown="resizeElement($index)">
+          <span class="glyphicon glyphicon-resize-full"></span>
         </div>
         <textarea type="text"
           ng-keydown="textListener($event);"

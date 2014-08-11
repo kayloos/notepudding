@@ -3,12 +3,13 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
     var user              = getUser(),
         lastPath          = { x1: null, y1: null, x2: null, y2: null },
         distanceThreshold = 6,
-        moveTarget        = null;
+        moveTarget        = null,
+        resizeTarget      = null;
 
     $scope.pad        = pad;
     $rootScope.alerts = [];
 
-    var defaultConfig = {
+    $rootScope.config = {
       style: {
         fontSize: "18px",
         fontFamily: "Helvetica Neue",
@@ -17,11 +18,16 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
       }
     };
 
-    if (!$.isEmptyObject(user)) {
+    if ($.isEmptyObject(user)) {
+      $rootScope.userSignedIn = false;
+      pad.pages[0] = defaultPage();
+      pad.currentPage = pad.pages[0];
+    }
+    else {
       $rootScope.userSignedIn = true;
-      pad.pages = user.pages;
-      pad.currentPageIdx = pad.pages.length - 1;
-      pad.currentPage = pad.pages[pad.currentPageIdx];
+      pad.pages               = user.pages;
+      pad.currentPageIdx      = pad.pages.length - 1;
+      pad.currentPage         = pad.pages[pad.currentPageIdx];
 
       if (pad.currentPage.textareas == null)
         pad.currentPage.textareas = [];
@@ -30,14 +36,6 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
 
       if (user.config != null)
         $rootScope.config = user.config;
-      else $rootScope.config = defaultConfig;
-    }
-    else {
-      $rootScope.userSignedIn = false;
-      pad.pages[0] = defaultPage();
-      pad.currentPage = pad.pages[0];
-
-      $rootScope.config = defaultConfig;
     }
 
 
@@ -114,6 +112,9 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
       }
       else if ($scope.actionState == "moving") {
         moveTarget = null;
+      }
+      else if ($scope.actionState == "resizing") {
+        resizeTarget = null;
       }
 
       $scope.actionState = "neutral"
@@ -207,6 +208,33 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', '$htt
         },
         content: ""
       });
+    };
+
+    $scope.resize = function(event) {
+      if ($scope.actionState != "resizing") return;
+      event.preventDefault();
+
+      target = pad.currentPage.textareas[resizeTarget];
+      if (resizeTarget != null) {
+
+        var x = pen.getX(event) - 65,
+            y = pen.getY(event) + 55;
+
+        var tx, ty;
+
+        tx = target.divStyle.top;
+        ty = target.divStyle.left;
+
+        tx = tx.substring(0, tx.length-2);
+        ty = ty.substring(0, ty.length-2);
+
+        target.textareaStyle.height = (y - ty) + "px";
+        target.textareaStyle.width = (x - tx) + "px";
+      }
+    };
+    $scope.resizeElement = function(index) {
+      $scope.actionState = "resizing";
+      resizeTarget = index;
     };
   }
 ]);

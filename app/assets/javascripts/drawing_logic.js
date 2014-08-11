@@ -150,7 +150,7 @@ pen = {
     return hyp;
   },
 
-  clone: function (obj) {
+  clone: function(obj) {
     return JSON.parse(JSON.stringify(obj));
   },
 };
