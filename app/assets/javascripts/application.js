@@ -23,7 +23,14 @@
 //= require marked
 //= require main
 //= require directives
-//= require services
+//= require services/action
+//= require services/config
+//= require services/curve
+//= require services/pad
+//= require services/state
+//= require services/textarea
+//= require services/user
+//= require services/user_controls
 //= require filters
 //= require controllers/controls
 //= require controllers/page

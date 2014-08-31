@@ -1,13 +1,13 @@
 <div id="frame"
   ng-controller="PageCtrl"
   ng-style="config.style"
-  ng-mousedown="startAction($event)"
-  ng-mouseup="endAction($event)"
-  ng-mousemove="move($event); freehand($event)"
+  ng-mousedown="action.start($event)"
+  ng-mouseup="action.end($event)"
+  ng-mousemove="textarea_s.move($event); curve.freehand($event)"
   >
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
-      <path svg ng-d="{{ currentCurve.lineString }}" />
+      <path svg ng-d="{{ curve.current.lineString }}" />
       <path svg ng-repeat="curve in pad.currentPage.curves" ng-d="{{ curve }}" />
     </g>
   </svg>
@@ -44,16 +44,16 @@
       <div class="textarea-div" ng-style="textarea.divStyle">
         <div class="move"
              ng-show="textarea.content && (isFocused || actionState == 'moving')"
-             ng-mousedown="moveTheTarget($index)">
+             ng-mousedown="textarea_s.moveTheTarget($index)">
           <%= image_tag "move.png", class: "move-icon" %>
         </div>
         <textarea type="text"
-          ng-keydown="textListener($event);"
+          ng-keydown="textarea_s.deselect($event);"
           ng-click="$event.stopPropagation();"
           ng-mousedown="$event.stopPropagation();"
           ng-model="textarea.content"
-          ng-blur="removeIfEmpty($event, $index); isFocused = false"
-          ng-mouseup="rememberDimensions($event, $index)"
+          ng-blur="textarea_s.removeIfEmpty($event, $index); isFocused = false"
+          ng-mouseup="textarea_s.rememberDimensions($event, $index)"
           ng-focus="isFocused = true"
           ng-init="isFocused = false"
           ng-style="textarea.textareaStyle"

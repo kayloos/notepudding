@@ -1,7 +1,3 @@
-// Place all the styles related to the Main controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
 html {
   font-size: 10px;
   height:100%; width: 100%;
@@ -140,6 +136,15 @@ body {
   line-height: 30px;
   z-index: 6;
   outline: none;
+  p {
+    margin: 0 0 32px 0;
+  }
+  ul {
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 .move {
   z-index: 6;
