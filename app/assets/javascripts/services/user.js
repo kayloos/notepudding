@@ -1,6 +1,6 @@
 notepuddingApp.factory('user', ['$rootScope', 'pad', 'config', function($rootScope, pad, config) {
   return {
-    importUser: function(user) {
+    import: function(user) {
       if (!$.isEmptyObject(user)) {
         $rootScope.userSignedIn = true;
         pad.pages               = user.pages;

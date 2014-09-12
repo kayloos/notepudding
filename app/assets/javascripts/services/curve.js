@@ -2,6 +2,10 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
   var distanceThreshold = 6;
   var emptyCurve        = { lineString: "", points: [] };
 
+  var subtractPoints = function(p1, p2) {
+    return { x: p1.x - p2.x, y: p1.y - p2.y };
+  };
+
   return {
     lastPath: { x1: null, y1: null, x2: null, y2: null},
     resetCurrent: function() {
@@ -21,15 +25,16 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
           this.current.lineString += startLetter + x + ", " + y
           this.current.points.push({ x: x, y: y });
 
-          this.lastPath.x1 = x, this.lastPath.y1 = y;
+          this.lastPath.x1 = x;
+          this.lastPath.y1 = y;
         }
       }
     },
 
     save: function() {
       var curveString = "",
-          prevEndCp = "",
-          i = 1;
+          prevEndCp   = "",
+          i           = 1;
 
       while (i < this.current.points.length) {
         currentPoint = this.current.points[i];
@@ -45,7 +50,7 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
         }
 
         if (prevEndCp === "") {
-          cpA         = prevPoint.x + " " + prevPoint.y;
+          cpA          = prevPoint.x + " " + prevPoint.y;
           curveString += "M " + cpA + "\n";
         }
 
@@ -73,7 +78,6 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
 
       if (curveString != "" && curveString != undefined)
         pad.currentPage.curves.push(curveString);
-
     }
   };
 }]);

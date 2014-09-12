@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
     }
   }
 
-  DEFAULT_PAD = [{ textareas: [] }]
+  DEFAULT_PAD = [{ textareas: [], curves: [] }]
 
   def config
     pads.any? ? current_pad.config : DEFAULT_CONFIG
@@ -29,3 +29,4 @@ class User < ActiveRecord::Base
     pads.any? ? pads.first : nil
   end
 end
+
