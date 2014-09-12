@@ -31,7 +31,7 @@ notepuddingApp.directive('focusedOn', ['$timeout', function($timeout) {
 
 notepuddingApp.directive('autosize', ['$timeout', function($timeout) {
   return function($scope, $element, $attrs) {
-    $timeout(function() {$element.autosize();}, 0, true);
+    $timeout(function() { $element.autosize(); }, 0, true);
   };
 }]);
 
@@ -49,12 +49,12 @@ notepuddingApp.directive('svg', function() {
   };
 });
 
-notepuddingApp.directive('focusMe', function ($timeout) {
-    return {
-        link: function (scope, element, attrs, model) {
-            $timeout(function () {
-                element[0].focus();
-            });
-        }
-    };
-});
+notepuddingApp.directive('focusMe', ['$timeout', function($timeout) {
+  return {
+    link: function (scope, element, attrs, model) {
+      $timeout(function () {
+        element[0].focus();
+      });
+    }
+  };
+}]);

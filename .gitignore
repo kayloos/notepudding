@@ -5,6 +5,7 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 # Ignore bundler config.
+./**/*/.DS_Store
 .DS_Store
 /.bundle
 
@@ -16,6 +17,7 @@
 /log/*.log
 /tmp
 notepudding.mkd
+public/assets
 notepudding.html
 tags
 .keep

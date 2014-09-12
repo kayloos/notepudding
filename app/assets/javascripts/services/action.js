@@ -26,6 +26,9 @@ notepuddingApp.factory('action', ['$timeout', 'state', 'textarea', 'curve', func
       else if (state.action == "moving") {
         textarea.moveTarget = null;
       }
+      else if ($scope.actionState == "resizing") {
+        textarea.resizeTarget = null;
+      }
 
       state.action = "neutral"
     },

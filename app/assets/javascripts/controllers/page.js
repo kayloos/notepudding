@@ -1,4 +1,5 @@
 'use strict';
+
 notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', 'pad', 'user', 'textarea', 'state', 'curve', 'action',
   function ($scope, $rootScope, $timeout, pad, user, textarea, state, curve, action) {
     $scope.pad        = pad;

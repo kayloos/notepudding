@@ -1,6 +1,7 @@
 notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeout, pad, state) {
   return {
     moveTarget: null,
+    resizeTarget: null,
     moveTheTarget: function($index) {
       state.action  = "moving";
       this.moveTarget = $index;
@@ -16,6 +17,31 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
             y = pen.getY(event) + 7;
 
         target.divStyle = { top: y + "px", left: x + "px" };
+      }
+    },
+    resize: function(event) {
+      return if ($scope.actionState != "resizing");
+      event.preventDefault();
+
+      target = pad.currentPage.textareas[resizeTarget];
+      if (resizeTarget != null) {
+
+        var x = pen.getX(event),
+            y = pen.getY(event);
+
+        var tx, ty, rx, ry;
+
+        tx = target.divStyle.top;
+        ty = target.divStyle.left;
+
+        tx = tx.substring(0, tx.length-2);
+        ty = ty.substring(0, ty.length-2);
+
+        rx = (x - tx) + "px";
+        ry = (y - ty) + "px";
+
+        target.textareaStyle.height = ry;
+        target.textareaStyle.width  = rx;
       }
     },
     deselect: function(event) {
