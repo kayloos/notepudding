@@ -1,18 +1,3 @@
-// notepuddingApp.directive('ngText', function($compile) {
-  // return {
-    // template: '<input type="text" class="text_field" />',
-    // restrict: 'E',
-    // replace: true,
-    // link: function($scope, elem) {
-      // $scope.addText = function(event) {
-        // var fromTop, fromLeft;
-        // fromTop = event.pageY; fromLeft = event.pageX;
-        // elem.after($compile('<ng-text></ng-text>')($scope)).offset({top: fromTop, left: fromLeft}).focus();
-      // }
-    // }
-  // };
-// });
-
 notepuddingApp.directive('focusedOn', ['$timeout', function($timeout) {
   return function($scope, $element, $attrs) {
     function focus() {

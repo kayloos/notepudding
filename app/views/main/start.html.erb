@@ -1,9 +1,10 @@
-<div id="frame"
+<div
+  id="frame"
   ng-controller="PageCtrl"
   ng-style="config.style"
   ng-mousedown="action.start($event)"
   ng-mouseup="action.end($event)"
-  ng-mousemove="textarea_s.move($event); curve.freehand($event)"
+  ng-mousemove="textarea_s.move($event); curve.freehand($event); textarea_s.resize($event)"
   >
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
@@ -47,10 +48,9 @@
              ng-mousedown="textarea_s.moveTheTarget($index)">
           <span class="glyphicon glyphicon-move"></span>
         </div>
-        <div
-          class="resize"
+        <div class="resize"
           ng-show="textarea.content && (isFocused || actionState == 'resizing')"
-          ng-mousedown="resizeElement($index)">
+          ng-mousedown="textarea_s.startResize($index)">
           <span class="glyphicon glyphicon-resize-full"></span>
         </div>
         <textarea type="text"
@@ -59,7 +59,6 @@
           ng-mousedown="$event.stopPropagation();"
           ng-model="textarea.content"
           ng-blur="textarea_s.removeIfEmpty($event, $index); isFocused = false"
-          ng-mouseup="textarea_s.rememberDimensions($event, $index)"
           ng-focus="isFocused = true"
           ng-init="isFocused = false"
           ng-style="textarea.textareaStyle"
@@ -70,7 +69,7 @@
         </textarea>
         <div class="rendered_textarea"
           ng-model="textarea.content" ng-bind-html="textarea.content | markdown"
-          ng-hide="isFocused" ng-click="isFocused = true">
+          ng-hide="isFocused" ng-click="isFocused = true" ng-style="textarea.textareaStyle">
         </div>
       </div>
     </div>

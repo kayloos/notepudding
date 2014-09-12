@@ -3,7 +3,7 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
     moveTarget: null,
     resizeTarget: null,
     moveTheTarget: function($index) {
-      state.action  = "moving";
+      state.action    = "moving";
       this.moveTarget = $index;
     },
     move: function(event) {
@@ -19,13 +19,16 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
         target.divStyle = { top: y + "px", left: x + "px" };
       }
     },
+    startResize: function($index) {
+      state.action      = 'resizing';
+      this.resizeTarget = $index;
+    },
     resize: function(event) {
-      return if ($scope.actionState != "resizing");
+      if (state.action != "resizing") return;
       event.preventDefault();
 
-      target = pad.currentPage.textareas[resizeTarget];
-      if (resizeTarget != null) {
-
+      target = pad.currentPage.textareas[this.resizeTarget];
+      if (this.resizeTarget != null) {
         var x = pen.getX(event),
             y = pen.getY(event);
 
@@ -40,8 +43,11 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
         rx = (x - tx) + "px";
         ry = (y - ty) + "px";
 
-        target.textareaStyle.height = ry;
-        target.textareaStyle.width  = rx;
+        target.textareaStyle = {
+          height: ry,
+          width: rx,
+          border: '2px solid rgba(0,0,0,0.6)'
+        };
       }
     },
     deselect: function(event) {
@@ -54,12 +60,6 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
     removeIfEmpty: function(event, idx) {
       var target = event.target || event.srcElement;
       if ($(target).val() == "") pad.currentPage.textareas.splice(idx, 1);
-    },
-    // When resizing using the browser we want the new size of the textarea to persist.
-    rememberDimensions: function(event, idx) {
-      var target = $(event.delegateTarget);
-      pad.currentPage.textareas[idx].textareaStyle.width  = target.outerWidth() + "px";
-      pad.currentPage.textareas[idx].textareaStyle.height = target.outerHeight() + "px";
     },
     addText: function(event, n) {
       if (pad.currentPage.textareas == null)
@@ -79,10 +79,12 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
         },
         textareaStyle: {
           width: "360px",
-          height: "30px",
+          height: "30px"
         },
         content: ""
       });
+
+      // TODO: Focus the textarea after adding it!
     }
   };
 }]);

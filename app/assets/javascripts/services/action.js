@@ -1,4 +1,6 @@
-notepuddingApp.factory('action', ['$timeout', 'state', 'textarea', 'curve', function($timeout, state, textarea, curve) {
+'use strict';
+
+notepuddingApp.factory('action', ['$timeout', 'state', 'textarea', 'curve', 'pad', function($timeout, state, textarea, curve, pad) {
   return {
     start: function(event) {
       if (state.action != "neutral") return;
@@ -26,11 +28,13 @@ notepuddingApp.factory('action', ['$timeout', 'state', 'textarea', 'curve', func
       else if (state.action == "moving") {
         textarea.moveTarget = null;
       }
-      else if ($scope.actionState == "resizing") {
+      else if (state.action == "resizing") {
+        target = pad.currentPage.textareas[textarea.resizeTarget];
+        target.textareaStyle.border = "";
         textarea.resizeTarget = null;
       }
 
-      state.action = "neutral"
+      state.action = "neutral";
     },
   };
 }]);
