@@ -21,6 +21,7 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
     freehand: function(event) {
       if (state.action == "drawing_temporary" ||
           state.action == "drawing_permanent") {
+        var x, y, x0, y0;
         x  = pen.getX(event);
         y  = pen.getY(event);
         x0 = this.lastPath.x1;
@@ -43,7 +44,14 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
     save: function() {
       var curveString = "",
           prevEndCp   = "",
-          i           = 1;
+          i           = 1,
+          currentPoint,
+          prevPoint,
+          nextPoint,
+          targetPoint,
+          cpA,
+          cpB,
+          result;
 
       while (i < this.current.points.length) {
         currentPoint = this.current.points[i];

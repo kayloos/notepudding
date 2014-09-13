@@ -99,7 +99,7 @@ test = {
   }
 };
 
-pen = {
+var pen = {
   getX: function(event) {
     return event.pageX - event.delegateTarget.offsetLeft;
   },

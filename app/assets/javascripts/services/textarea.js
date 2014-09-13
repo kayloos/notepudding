@@ -1,3 +1,5 @@
+'use strict';
+
 notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeout, pad, state) {
   return {
     moveTarget: null,
@@ -10,7 +12,7 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
       if (state.action != "moving") return;
       event.preventDefault();
 
-      target = pad.currentPage.textareas[this.moveTarget];
+      var target = pad.currentPage.textareas[this.moveTarget];
       if (this.moveTarget != null) {
 
         var x = pen.getX(event) + 8,
@@ -27,15 +29,16 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
       if (state.action != "resizing") return;
       event.preventDefault();
 
-      target = pad.currentPage.textareas[this.resizeTarget];
+      var target = pad.currentPage.textareas[this.resizeTarget];
+
       if (this.resizeTarget != null) {
         var x = pen.getX(event),
             y = pen.getY(event);
 
         var tx, ty, rx, ry;
 
-        tx = target.divStyle.top;
-        ty = target.divStyle.left;
+        tx = target.divStyle.left;
+        ty = target.divStyle.top;
 
         tx = tx.substring(0, tx.length-2);
         ty = ty.substring(0, ty.length-2);
@@ -45,8 +48,7 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
 
         target.textareaStyle = {
           height: ry,
-          width: rx,
-          border: '2px solid rgba(0,0,0,0.6)'
+          width: rx
         };
       }
     },
@@ -75,7 +77,7 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
         id: n,
         divStyle: {
           left: x + "px",
-          top: y + "px",
+          top: y + "px"
         },
         textareaStyle: {
           width: "360px",
@@ -83,8 +85,6 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
         },
         content: ""
       });
-
-      // TODO: Focus the textarea after adding it!
     }
   };
 }]);

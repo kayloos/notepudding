@@ -44,18 +44,30 @@ notepuddingApp.directive('focusMe', ['$timeout', function($timeout) {
   };
 }]);
 
-notepuddingApp.directive('notepuddingTextarea', [function() {
+notepuddingApp.directive('notepuddingTextarea', ['state', function(state) {
   return {
     restrict: 'E',
     templateUrl: 'textarea.html',
-    link: function(scope, iElement, iAttrs, controller, transcludeFn) {
-      scope.toggleFocus = function(event) {
-        // TODO: Make toggle action that toggles the focus of a textarea.
-        //       We want to be able to toggle the state of the textarea,
-        //       and control when it is in focus. The goal is that when
-        //       the user clicks the rendered textarea, the real textarea
-        //       is not only shown but also in focus.
+    link: function(scope, iElement, iAttrs) {
+      scope.isFocused = false;
+
+      scope.enableFocus = function() {
+        iElement.find('.rendered-textarea').hide();
+        iElement.find('textarea').show().focus();
+        scope.isFocused = true;
       };
+
+      scope.disableFocus = function() {
+        if (state.action == "resizing") return;
+        iElement.find('textarea').hide();
+        iElement.find('.rendered-textarea').show();
+        scope.isFocused = false;
+      };
+
+      if (scope.textarea.content != "")
+        scope.disableFocus();
+      else
+        scope.enableFocus();
     }
   }
 }]);

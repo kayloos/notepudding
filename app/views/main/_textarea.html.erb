@@ -15,18 +15,18 @@
       ng-click="$event.stopPropagation();"
       ng-mousedown="$event.stopPropagation();"
       ng-model="textarea.content"
-      ng-blur="textarea_s.removeIfEmpty($event, $index); isFocused = false"
-      ng-focus="isFocused = true"
-      ng-init="isFocused = true"
+      ng-blur="textarea_s.removeIfEmpty($event, $index); disableFocus()"
       ng-style="textarea.textareaStyle"
       focused-on="$last"
-      ng-show="isFocused"
       autosize
       class="textarea">
     </textarea>
-    <div class="rendered_textarea"
-      ng-model="textarea.content" ng-bind-html="textarea.content | markdown"
-      ng-hide="isFocused" ng-mousedown="$event.stopPropagation();" ng-click="isFocused = true" ng-style="textarea.textareaStyle">
+    <div class="rendered-textarea"
+      ng-model="textarea.content"
+      ng-bind-html="textarea.content | markdown"
+      ng-mousedown="$event.stopPropagation();"
+      ng-click="enableFocus()"
+      ng-style="textarea.textareaStyle">
     </div>
   </div>
 </script>

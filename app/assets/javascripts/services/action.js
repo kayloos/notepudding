@@ -29,7 +29,7 @@ notepuddingApp.factory('action', ['$timeout', 'state', 'textarea', 'curve', 'pad
         textarea.moveTarget = null;
       }
       else if (state.action == "resizing") {
-        target = pad.currentPage.textareas[textarea.resizeTarget];
+        var target = pad.currentPage.textareas[textarea.resizeTarget];
         target.textareaStyle.border = "";
         textarea.resizeTarget = null;
       }
