@@ -1,0 +1,47 @@
+#page_counter {
+  top: 50%;
+  right: -72px;
+  margin-top: -24px;
+  color: rgba(255,255,255,0.4);
+}
+#page_counter:hover {
+  color: rgba(255,255,255,1);
+}
+.gear, .save, .arrow, .sign_up, .sign_out {
+  width: 32px;
+  height: 32px;
+  opacity: 0.4;
+  z-index: 10;
+}
+.arrow { width: 48px; height: 48px; }
+.gear:hover, .save:hover, .arrow:hover, .sign_up:hover, .sign_out:hover {
+  opacity: 1;
+}
+.arrow.deactivated {
+  opacity: 0.6;
+}
+#turn_left, #turn_right, #settings, #save, #sign_up, #page_counter, #sign_out {
+  position: absolute;
+  z-index: 10;
+}
+#turn_left {
+  left: -80px;
+  bottom: 16px;
+}
+#turn_right {
+  right: -80px;
+  bottom: 16px;
+}
+#settings {
+  top: 16px;
+  right: -64px;
+}
+#save {
+  top: 16px;
+  left: -108px;
+}
+#sign_up, #sign_out {
+  top: 16px;
+  left: -64px;
+}
+

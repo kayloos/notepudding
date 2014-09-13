@@ -42,42 +42,14 @@
   <div class="header" ng-style="{ backgroundColor: config.style.backgroundColor }"></div>
   <div class="paper">
     <div ng-repeat="textarea in pad.currentPage.textareas">
-      <div class="textarea-div" ng-style="textarea.divStyle">
-        <div class="move"
-             ng-show="textarea.content && (isFocused || actionState == 'moving')"
-             ng-mousedown="textarea_s.moveTheTarget($index)">
-          <span class="glyphicon glyphicon-move"></span>
-        </div>
-        <div class="resize"
-          ng-show="textarea.content && (isFocused || actionState == 'resizing')"
-          ng-mousedown="textarea_s.startResize($index)">
-          <span class="glyphicon glyphicon-resize-full"></span>
-        </div>
-        <textarea type="text"
-          ng-keydown="textarea_s.deselect($event);"
-          ng-click="$event.stopPropagation();"
-          ng-mousedown="$event.stopPropagation();"
-          ng-model="textarea.content"
-          ng-blur="textarea_s.removeIfEmpty($event, $index); isFocused = false"
-          ng-focus="isFocused = true"
-          ng-init="isFocused = false"
-          ng-style="textarea.textareaStyle"
-          focused-on="$last"
-          ng-show="isFocused"
-          autosize
-          class="textarea">
-        </textarea>
-        <div class="rendered_textarea"
-          ng-model="textarea.content" ng-bind-html="textarea.content | markdown"
-          ng-hide="isFocused" ng-click="isFocused = true" ng-style="textarea.textareaStyle">
-        </div>
-      </div>
+      <notepudding-textarea></notepudding-textarea>
     </div>
   </div>
   <%= render 'settings' %>
   <%= render 'sign_up_in' %>
+  <%= render 'textarea' %>
   <%= render 'save' %>
 </div>
 
-<script>function getUser () { return <%=raw @user %> };</script>
+<script>function getUser () { return <%=raw @user %> }</script>
 

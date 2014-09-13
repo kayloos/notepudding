@@ -1,0 +1,32 @@
+<script type="text/ng-template" id="textarea.html">
+  <div class="textarea-div" ng-style="textarea.divStyle">
+    <div class="move"
+          ng-show="textarea.content && (isFocused || actionState == 'moving')"
+          ng-mousedown="textarea_s.moveTheTarget($index)">
+      <span class="glyphicon glyphicon-move"></span>
+    </div>
+    <div class="resize"
+      ng-show="textarea.content && (isFocused || actionState == 'resizing')"
+      ng-mousedown="textarea_s.startResize($index)">
+      <span class="glyphicon glyphicon-resize-full"></span>
+    </div>
+    <textarea type="text"
+      ng-keydown="textarea_s.deselect($event);"
+      ng-click="$event.stopPropagation();"
+      ng-mousedown="$event.stopPropagation();"
+      ng-model="textarea.content"
+      ng-blur="textarea_s.removeIfEmpty($event, $index); isFocused = false"
+      ng-focus="isFocused = true"
+      ng-init="isFocused = true"
+      ng-style="textarea.textareaStyle"
+      focused-on="$last"
+      ng-show="isFocused"
+      autosize
+      class="textarea">
+    </textarea>
+    <div class="rendered_textarea"
+      ng-model="textarea.content" ng-bind-html="textarea.content | markdown"
+      ng-hide="isFocused" ng-mousedown="$event.stopPropagation();" ng-click="isFocused = true" ng-style="textarea.textareaStyle">
+    </div>
+  </div>
+</script>
