@@ -58,7 +58,7 @@ notepuddingApp.directive('notepuddingTextarea', ['state', function(state) {
       };
 
       scope.disableFocus = function() {
-        if (state.action == "resizing") return;
+        if (state.action == "resizing" || state.action == "moving") return;
         iElement.find('textarea').hide();
         iElement.find('.rendered-textarea').show();
         scope.isFocused = false;
@@ -71,4 +71,17 @@ notepuddingApp.directive('notepuddingTextarea', ['state', function(state) {
     }
   }
 }]);
+
+// notepuddingApp.directive('notepuddingCurve', ['pad', function(pad) {
+  // return {
+    // restrict: 'E',
+    // replace: true,
+    // template: '<path svg ng-repeat="curve in pad.currentPage.curves" ng-d="{{ curve }}" ng-click="niggaYouCrazy()" />',
+    // link: function(scope, iElement) {
+      // scope.pad = pad;
+      // scope.niggaYouCrazy = function() {
+      // }
+    // }
+  // }
+// }]);
 

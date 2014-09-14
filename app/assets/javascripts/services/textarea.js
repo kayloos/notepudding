@@ -61,7 +61,9 @@ notepuddingApp.factory('textarea', ['$timeout', 'pad', 'state', function($timeou
     },
     removeIfEmpty: function(event, idx) {
       var target = event.target || event.srcElement;
-      if ($(target).val() == "") pad.currentPage.textareas.splice(idx, 1);
+      if ($(target).val() == "") {
+        pad.currentPage.textareas.splice(idx, 1);
+      }
     },
     addText: function(event, n) {
       if (pad.currentPage.textareas == null)

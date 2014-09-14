@@ -12,6 +12,10 @@ notepuddingApp.controller('PageCtrl', ['$scope', '$rootScope', '$timeout', 'pad'
     $rootScope.closeAlert = function(index) { $rootScope.alerts.splice(index, 1); };
 
     user.import(getUser());
+
+    $scope.bob = function() {
+      alert("hej");
+    };
   }
 ]);
 

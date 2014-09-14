@@ -3,7 +3,7 @@
 notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
   var stageDistanceThreshold  = 2;
   var commitDistanceThreshold = 5;
-  var emptyCurve              = { lineString: "", points: [] };
+  var emptyCurve = function() { return { lineString: "", points: [] } };
 
   var subtractPoints = function(p1, p2) {
     return { x: p1.x - p2.x, y: p1.y - p2.y };
@@ -13,10 +13,10 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
     lastPath: { x1: null, y1: null, x2: null, y2: null},
 
     resetCurrent: function() {
-      this.current = emptyCurve;
+      this.current = emptyCurve();
     },
 
-    current: emptyCurve,
+    current: emptyCurve(),
 
     freehand: function(event) {
       if (state.action == "drawing_temporary" ||
@@ -91,8 +91,7 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
           i += 3;
       }
 
-      this.current.lineString = "";
-      this.current.points     = [];
+      this.resetCurrent();
 
       if (pad.currentPage.curves == undefined)
         pad.currentPage.curves = [];

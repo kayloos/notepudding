@@ -9,7 +9,7 @@
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
       <path svg ng-d="{{ curve.current.lineString }}" />
-      <path svg ng-repeat="curve in pad.currentPage.curves" ng-d="{{ curve }}" />
+      <path class="bob" svg ng-repeat="curve in pad.currentPage.curves" ng-d="{{ curve }}" ng-click="bob()" />
     </g>
   </svg>
   <alert

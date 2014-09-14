@@ -1,6 +1,8 @@
 'use strict';
 
-notepuddingApp.factory('action', ['$timeout', 'state', 'textarea', 'curve', 'pad', function($timeout, state, textarea, curve, pad) {
+notepuddingApp.factory('action',
+  ['$timeout', 'state', 'textarea', 'curve', 'pad',
+  function($timeout, state, textarea, curve, pad) {
   return {
     start: function(event) {
       if (state.action != "neutral") return;
@@ -18,7 +20,7 @@ notepuddingApp.factory('action', ['$timeout', 'state', 'textarea', 'curve', 'pad
       if (state.action == "drawing_temporary") {
         // Remove current curve
         // Add text field, ready for writing
-        curve.current = curve.empty;
+        curve.resetCurrent();
         textarea.addText(event, pad.currentPage.textareas.length);
       }
       else if (state.action == "drawing_permanent") {
