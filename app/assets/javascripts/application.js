@@ -19,7 +19,6 @@
 //= require angular-touch
 //= require angular-ui
 //= require drawing_logic
-//= require default_page
 //= require marked
 //= require main
 //= require directives

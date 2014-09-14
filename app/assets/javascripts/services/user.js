@@ -18,7 +18,7 @@ notepuddingApp.factory('user', ['$rootScope', 'pad', 'config', function($rootSco
       }
       else {
         $rootScope.userSignedIn = false;
-        pad.pages[0] = defaultPage();
+        pad.pages[0] = pad.defaultPage();
         pad.currentPage = pad.pages[0];
 
         $rootScope.config = config.defaultConfig;
