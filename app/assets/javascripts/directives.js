@@ -69,7 +69,7 @@ notepuddingApp.directive('notepuddingTextarea', ['state', function(state) {
       else
         scope.enableFocus();
     }
-  }
+  };
 }]);
 
 // notepuddingApp.directive('notepuddingCurve', ['pad', function(pad) {
