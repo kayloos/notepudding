@@ -89,3 +89,4 @@ notepuddingApp.controller('ControlCtrl',
     $timeout(function() { $rootScope.closeAlert(idx); }, 8000, true);
   };
 }]);
+
