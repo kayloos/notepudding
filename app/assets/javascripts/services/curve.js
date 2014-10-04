@@ -62,14 +62,14 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
 
         // At the end of the array, we still want to add the last point
         if (nextPoint === undefined) {
-          curveString += "C" + prevEndCp + ", " + targetPoint + ", "
-                         + targetPoint + "\n";
+          curveString += "C" + prevEndCp + "," + targetPoint + ","
+                         + targetPoint;
           break;
         }
 
         if (prevEndCp === "") {
           cpA          = prevPoint.x + " " + prevPoint.y;
-          curveString += "M " + cpA + "\n";
+          curveString += "M " + cpA;
         }
 
         else {
@@ -80,7 +80,7 @@ notepuddingApp.factory('curve', ['pad', 'state', function(pad, state) {
                                              subtractPoints(nextPoint, currentPoint));
         cpB          = (result.a.x + currentPoint.x) + " " +
                        (result.a.y + currentPoint.y);
-        curveString += "C" + cpA + ", " + cpB + ", " + targetPoint + "\n";
+        curveString += "C" + cpA + "," + cpB + "," + targetPoint;
 
         prevEndCp = (result.b.x + currentPoint.x) + " "
                     + (result.b.y + currentPoint.y);
