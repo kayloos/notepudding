@@ -9,7 +9,10 @@
   <svg>
     <g fill="none" stroke="black" stroke-width="2px">
       <path svg ng-d="{{ curve.current.lineString }}" />
-      <path class="bob" svg ng-repeat="curve in pad.currentPage.curves" ng-d="{{ curve }}" ng-click="bob()" />
+    </g>
+
+    <g fill='none' ng-repeat="curve in pad.currentPage.curves" stroke="black" stroke-width="2px" ng-click="select($event)">
+      <path class="curve" svg ng-d="{{ curve }}" />
     </g>
   </svg>
   <alert
@@ -67,5 +70,5 @@
   <%= render 'save' %>
 </div>
 
-<script>function getUser () { return <%=raw @user %> }</script>
+<script>function getUser () { return <%=raw @user %>; }</script>
 
